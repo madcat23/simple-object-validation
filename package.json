@@ -1,0 +1,36 @@
+{
+  "name": "simple-object-validation",
+  "version": "0.0.1",
+  "description": "Library for JavaScript Object validation",
+  "main": "./bin/simple-object-validation.js",
+  "scripts": {
+    "build": "node ./node_modules/webpack/bin/webpack.js",
+    "watch": "node ./node_modules/webpack/bin/webpack.js --progress --colors --watch",
+    "test": "jest",
+    "watch-test": "jest --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madcat23/simple-object-validation.git"
+  },
+  "author": "madcat23",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/madcat23/simple-object-validation/issues"
+  },
+  "homepage": "https://github.com/madcat23/simple-object-validation#readme",
+  "devDependencies": {
+    "babel-cli": "^6.22.2",
+    "babel-core": "^6.22.1",
+    "babel-jest": "^18.0.0",
+    "babel-loader": "^6.2.10",
+    "babel-polyfill": "^6.22.0",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-stage-0": "^6.22.0",
+    "eslint": "^3.14.1",
+    "eslint-config-airbnb-base": "^11.0.1",
+    "eslint-plugin-import": "^2.2.0",
+    "jest": "^18.1.0",
+    "webpack": "^1.14.0"
+  }
+}
