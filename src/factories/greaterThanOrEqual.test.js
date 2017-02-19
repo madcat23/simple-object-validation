@@ -1,9 +1,9 @@
-import greaterThanOrEqual from './greaterThanOrEqual'
+import originalGreaterThanOrEqual from './greaterThanOrEqual'
 import { errorMessageCreator, ERROR_MESSAGE } from '../utils/testUtils'
 /* global test, it, expect */
 
-const greaterThanOrEqualReturningTestErrorMessage = greaterThanOrEqual(errorMessageCreator)
-const greaterThanOrEqual10 = greaterThanOrEqualReturningTestErrorMessage(10)('some random field name')
+const greaterThanOrEqual = originalGreaterThanOrEqual(errorMessageCreator)
+const greaterThanOrEqual10 = greaterThanOrEqual(10)('some random field name')
 
 
 test('smaller value -> error message', () => {

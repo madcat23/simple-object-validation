@@ -4,8 +4,8 @@
   "description": "Library for JavaScript Object validation",
   "main": "./bin/simple-object-validation.js",
   "scripts": {
-    "build": "node ./node_modules/webpack/bin/webpack.js",
-    "watch": "node ./node_modules/webpack/bin/webpack.js --progress --colors --watch",
+    "build": "webpack",
+    "watch": "webpack --progress --colors --watch",
     "test": "jest",
     "watch-test": "jest --watch"
   },
