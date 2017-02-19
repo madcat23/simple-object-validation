@@ -2,7 +2,7 @@ import originalRequired from './required'
 import { errorMessageCreator, ERROR_MESSAGE } from '../utils/testUtils'
 /* global it, expect */
 
-const required = originalRequired(errorMessageCreator)('field name')
+const required = originalRequired({ messageCreator: errorMessageCreator })('field name')
 
 it('should not return anything for a given string', () => {
   expect(required('some string')).toBeUndefined()

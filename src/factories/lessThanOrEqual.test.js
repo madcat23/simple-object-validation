@@ -2,7 +2,9 @@ import lessThanOrEqual from './lessThanOrEqual'
 import { errorMessageCreator, ERROR_MESSAGE } from '../utils/testUtils'
 /* global test, it, expect */
 
-const lessThanOrEqualReturningTestErrorMessage = lessThanOrEqual(errorMessageCreator)
+const lessThanOrEqualReturningTestErrorMessage = lessThanOrEqual({
+  messageCreator: errorMessageCreator,
+})
 const lessThanOrEqual10 = lessThanOrEqualReturningTestErrorMessage(10)('some random field name')
 
 

@@ -2,7 +2,7 @@ import originalGreaterThanOrEqual from './greaterThanOrEqual'
 import { errorMessageCreator, ERROR_MESSAGE } from '../utils/testUtils'
 /* global test, it, expect */
 
-const greaterThanOrEqual = originalGreaterThanOrEqual(errorMessageCreator)
+const greaterThanOrEqual = originalGreaterThanOrEqual({ messageCreator: errorMessageCreator })
 const greaterThanOrEqual10 = greaterThanOrEqual(10)('some random field name')
 
 
