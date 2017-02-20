@@ -10,15 +10,20 @@ const regularValidator = (checker, messageCreator, nameTransformer, param) => na
 // eslint-disable-next-line max-len
 const validator = (checker, { messageCreator, nameTransformer, expectParameter = false }) => param => {
   if (typeof param === 'object') {
-    // Called to customize error message
-    const messageCreatorOverride = param.hasOwnProperty('messageCreator') ? param.messageCreator : messageCreator
-    const nameTransformerOverride = param.hasOwnProperty('nameTransformer') ? param.nameTransformer : nameTransformer
+    const hasMessageCreatorParam = param.hasOwnProperty('messageCreator')
+    const hasNameTransformerParam = param.hasOwnProperty('nameTransformer')
 
-    return validator(checker, {
-      messageCreator: messageCreatorOverride,
-      nameTransformer: nameTransformerOverride,
-      expectParameter,
-    })
+    if (hasMessageCreatorParam || hasNameTransformerParam) {
+      // Called to customize error message
+      const messageCreatorOverride = hasMessageCreatorParam ? param.messageCreator : messageCreator
+      const nameTransformerOverride = hasNameTransformerParam ? param.nameTransformer : nameTransformer // eslint-disable-line max-len
+
+      return validator(checker, {
+        messageCreator: messageCreatorOverride,
+        nameTransformer: nameTransformerOverride,
+        expectParameter,
+      })
+    }
   }
 
   /*
