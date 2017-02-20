@@ -11,20 +11,20 @@ test('smaller value -> error message', () => {
   expect(greaterThanOrEqual10(9)).toEqual(ERROR_MESSAGE)
 })
 
-test('minimal value -> undefined', () => {
+test('minimal value -> OK', () => {
   expect(greaterThanOrEqual10(10)).toBeUndefined()
 })
 
-test('greater value -> undefined', () => {
+test('greater value -> OK', () => {
   expect(greaterThanOrEqual10(11)).toBeUndefined()
   expect(greaterThanOrEqual10(1000000)).toBeUndefined()
 })
 
-test('undefined -> undefined', () => {
+test('undefined -> OK', () => {
   expect(greaterThanOrEqual10()).toBeUndefined()
 })
 
-test('null -> undefined', () => {
+test('null -> OK', () => {
   expect(greaterThanOrEqual10(null)).toBeUndefined()
 })
 

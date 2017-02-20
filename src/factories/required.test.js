@@ -1,37 +1,37 @@
 import originalRequired from './required'
 import { errorMessageCreator, ERROR_MESSAGE } from '../utils/testUtils'
-/* global it, expect */
+/* global test, it, expect */
 
 const required = originalRequired({ messageCreator: errorMessageCreator })('field name')
 
-it('should not return anything for a given string', () => {
+test('string -> OK', () => {
   expect(required('some string')).toBeUndefined()
 })
 
-it('should not return anything for a given number', () => {
+test('number -> OK', () => {
   expect(required(42)).toBeUndefined()
 })
 
-it('should not return anything for a given object', () => {
+test('object -> OK', () => {
   expect(required({ foo: 'bar' })).toBeUndefined()
 })
 
-it('should not return anything for a given array', () => {
+test('array -> OK', () => {
   expect(required(['foo', 'bar', 23])).toBeUndefined()
 })
 
-it('should return an error message for undefined', () => {
+test('undefined -> error message', () => {
   expect(required()).toEqual(ERROR_MESSAGE)
 })
 
-it('should return an error message for null', () => {
+test('null -> error message', () => {
   expect(required(null)).toEqual(ERROR_MESSAGE)
 })
 
-it('should return an error message for an empty string', () => {
+test('empty string -> error message', () => {
   expect(required('')).toEqual(ERROR_MESSAGE)
 })
 
-it('should not return an error message for a blank string', () => {
+test('blank string -> OK', () => {
   expect(required(' ')).toBeUndefined()
 })
