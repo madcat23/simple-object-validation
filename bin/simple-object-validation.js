@@ -166,15 +166,20 @@
 	      expectParameter = _ref$expectParameter === undefined ? false : _ref$expectParameter;
 	  return function (param) {
 	    if ((typeof param === 'undefined' ? 'undefined' : _typeof(param)) === 'object') {
-	      // Called to customize error message
-	      var messageCreatorOverride = param.hasOwnProperty('messageCreator') ? param.messageCreator : messageCreator;
-	      var nameTransformerOverride = param.hasOwnProperty('nameTransformer') ? param.nameTransformer : nameTransformer;
+	      var hasMessageCreatorParam = param.hasOwnProperty('messageCreator');
+	      var hasNameTransformerParam = param.hasOwnProperty('nameTransformer');
 
-	      return validator(checker, {
-	        messageCreator: messageCreatorOverride,
-	        nameTransformer: nameTransformerOverride,
-	        expectParameter: expectParameter
-	      });
+	      if (hasMessageCreatorParam || hasNameTransformerParam) {
+	        // Called to customize error message
+	        var messageCreatorOverride = hasMessageCreatorParam ? param.messageCreator : messageCreator;
+	        var nameTransformerOverride = hasNameTransformerParam ? param.nameTransformer : nameTransformer; // eslint-disable-line max-len
+
+	        return validator(checker, {
+	          messageCreator: messageCreatorOverride,
+	          nameTransformer: nameTransformerOverride,
+	          expectParameter: expectParameter
+	        });
+	      }
 	    }
 
 	    /*
