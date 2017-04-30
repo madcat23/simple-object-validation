@@ -12,6 +12,10 @@ export default (validators, options) => value => {
   for (const property in validators) {
     if (validators.hasOwnProperty(property)) {
       const eachValidator = validators[property]
+      if (typeof eachValidator !== 'function') {
+        throw new Error(`Error validating ${property}. Given validator is not a function. 
+          Maybe a validator has already been called by mistake: e. g. isValid('param1')('param2')('field name')`)
+      }
 
       let nestedValue
       /*
@@ -27,6 +31,10 @@ export default (validators, options) => value => {
 
       // validate value:
       const validationResult = eachValidator(nestedValue)
+      if (typeof validationResult === 'function') {
+        throw new Error(`Error validating ${property}. Validation result is a function. 
+          Maybe a validator has not been correctly parameterized (param, field name, etc.) ...`)
+      }
 
       // check result: (TODO: change to whitelisting!)
       const resultIsEmptyObject = typeof validationResult === 'object' && Object.keys(validationResult).length === 0
