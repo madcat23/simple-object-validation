@@ -1,4 +1,4 @@
-import validator from '../validator/validator'
+import validator from '../core/validator'
 import { isValueEmpty, isValueNumeric } from '../utils/utils'
 
 export default validator((value, param) => {

@@ -1,4 +1,4 @@
-import lessThanOrEqual from './lessThanOrEqual'
+import lessThanOrEqual from './isLessThanOrEqual'
 import { errorMessageCreator, ERROR_MESSAGE } from '../utils/testUtils'
 /* global test, it, expect */
 

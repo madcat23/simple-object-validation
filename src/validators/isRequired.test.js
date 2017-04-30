@@ -1,4 +1,4 @@
-import originalRequired from './required'
+import originalRequired from './isRequired'
 import { errorMessageCreator, ERROR_MESSAGE } from '../utils/testUtils'
 /* global test, it, expect */
 

@@ -1,4 +1,4 @@
-import originalBetween from './between'
+import originalBetween from './isBetween'
 import { errorMessageCreator, ERROR_MESSAGE } from '../utils/testUtils'
 /* global test, it, expect */
 

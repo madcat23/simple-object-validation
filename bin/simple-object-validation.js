@@ -95,39 +95,39 @@
 	  }
 	});
 
-	var _greaterThanOrEqual = __webpack_require__(6);
+	var _isGreaterThanOrEqual = __webpack_require__(6);
 
-	Object.defineProperty(exports, 'greaterThanOrEqual', {
+	Object.defineProperty(exports, 'isGreaterThanOrEqual', {
 	  enumerable: true,
 	  get: function get() {
-	    return _interopRequireDefault(_greaterThanOrEqual).default;
+	    return _interopRequireDefault(_isGreaterThanOrEqual).default;
 	  }
 	});
 
-	var _lessThanOrEqual = __webpack_require__(8);
+	var _isLessThanOrEqual = __webpack_require__(8);
 
-	Object.defineProperty(exports, 'lessThanOrEqual', {
+	Object.defineProperty(exports, 'isLessThanOrEqual', {
 	  enumerable: true,
 	  get: function get() {
-	    return _interopRequireDefault(_lessThanOrEqual).default;
+	    return _interopRequireDefault(_isLessThanOrEqual).default;
 	  }
 	});
 
-	var _between = __webpack_require__(9);
+	var _isBetween = __webpack_require__(9);
 
-	Object.defineProperty(exports, 'between', {
+	Object.defineProperty(exports, 'isBetween', {
 	  enumerable: true,
 	  get: function get() {
-	    return _interopRequireDefault(_between).default;
+	    return _interopRequireDefault(_isBetween).default;
 	  }
 	});
 
-	var _required = __webpack_require__(10);
+	var _isRequired = __webpack_require__(10);
 
-	Object.defineProperty(exports, 'required', {
+	Object.defineProperty(exports, 'isRequired', {
 	  enumerable: true,
 	  get: function get() {
-	    return _interopRequireDefault(_required).default;
+	    return _interopRequireDefault(_isRequired).default;
 	  }
 	});
 
@@ -235,6 +235,9 @@
 	    for (var property in validators) {
 	      if (validators.hasOwnProperty(property)) {
 	        var eachValidator = validators[property];
+	        if (typeof eachValidator !== 'function') {
+	          throw new Error('Error validating ' + property + '. Given validator is not a function. \n          Maybe a validator has already been called by mistake: e. g. isValid(\'param1\')(\'param2\')(\'field name\')');
+	        }
 
 	        var nestedValue = void 0;
 	        /*
@@ -250,6 +253,9 @@
 
 	        // validate value:
 	        var validationResult = eachValidator(nestedValue);
+	        if (typeof validationResult === 'function') {
+	          throw new Error('Error validating ' + property + '. Validation result is a function. \n          Maybe a validator has not been correctly parameterized (param, field name, etc.) ...');
+	        }
 
 	        // check result: (TODO: change to whitelisting!)
 	        var resultIsEmptyObject = (typeof validationResult === 'undefined' ? 'undefined' : _typeof(validationResult)) === 'object' && Object.keys(validationResult).length === 0;

@@ -1,4 +1,4 @@
-import originalGreaterThanOrEqual from './greaterThanOrEqual'
+import originalGreaterThanOrEqual from './isGreaterThanOrEqual'
 import { errorMessageCreator, ERROR_MESSAGE } from '../utils/testUtils'
 /* global test, it, expect */
 
