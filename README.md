@@ -10,7 +10,7 @@ The idea is to use only functions and no constraint configuration or something l
 ## Simple registration form
 
 ```javascript
-import { assemble, chain, isRequired, isInteger, isGreaterThanOrEqual, isEmail }
+import { assemble, chain, isRequired, isInteger, isGreaterThanOrEqual, isEmail } from 'simple-object-validation'
 
 const isValidCustomer = assemble({
   name: isRequired('Name'),
