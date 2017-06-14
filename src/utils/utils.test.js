@@ -26,5 +26,5 @@ test('empty object -> false', () => {
 /* ########## isValueNumeric ########## */
 // TODO
 
-/* ########## isValueAlphaNumeric ########## */
+/* ########## isValueAlphanumeric ########## */
 // TODO
