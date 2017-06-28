@@ -2,168 +2,172 @@
 <html>
   <head>
     <title>simple object validation API</title>
-    <!--
--->
-    <link href="css/font-awesome.min.css" rel="stylesheet">
-    <!-- Latest compiled and minified CSS -->
+    <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-    <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/xcode.min.css">
+    <link rel="stylesheet" href="css/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    
-    <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    
-    <style>
-      .nav-side-menu {
-        overflow: auto;
-        font-family: sans-serif;
-        font-size: 14px;
-        font-weight: 200;
-        background-color: #ffffff;
-        position: fixed;
-        top: 0px;
-        width: 300px;
-        height: 100%;
-      }
-      .nav-side-menu .brand {
-        background-color: #ffffff;
-        line-height: 50px;
-        display: block;
-        text-align: center;
-        font-size: 12px;
-        color: #222222;
-      }
-      .nav-side-menu .brand img {
-        margin-right: 12px;
-      }
-      .nav-side-menu .toggle-btn {
-        display: none;
-      }
-      .menu-list a {
-        color: #777777;
-        font-size: 16px;
-        display: block;
-        line-height: 40px;
-        height: 40px;
-        padding: 0 12px;
-        text-decoration: none;
-        border-bottom: 1px solid #e0e0e0;
-        padding-left: 20px;
-      }
-      .menu-list a.headline {
-        padding: 0 12px;
-        font-size: 20px;
-        line-height: 48px;
-        height: 48px;
-        margin-top: 10px;
-      }
-      .menu-list a:hover {
-        background: #4FADC8;
-        color: #ffffff;
-      }
-      .menu-list a:active {
-        background: #2E7D94;
-        color: #ffffff;
-      }
-      .menu-list a.active {
-        background: #e0e0e0;
-        font-weight: bold;
-        color: #444444;
-      }
-      .menu-list a.active:hover {
-        color: #444444;
-      }
-      @media (max-width: 767px) {
-        .nav-side-menu {
-          position: relative;
-          width: 100%;
-          margin-bottom: 10px;
-          border-right: none;
-        }
-        .nav-side-menu .toggle-btn {
-          display: block;
-          cursor: pointer;
-          position: absolute;
-          right: 10px;
-          top: 10px;
-          z-index: 10 !important;
-          padding: 3px;
-          background-color: #2E7D94;
-          color: #ffffff;
-          width: 40px;
-          text-align: center;
-        }
-        .nav-side-menu .brand {
-          text-align: left !important;
-          line-height: 50px !important;
-          padding-left: 12px;
-        }
-      }
-      .content {
-        padding-left: 12px;
-      }
-      @media (min-width: 767px) {
-        .nav-side-menu .menu-list .menu-content {
-          display: block;
-        }
-        .content {
-          padding: 20px 20px 20px 340px;
-        }
-        .nav-side-menu .brand {
-          text-align: left;
-          padding-left: 12px;
-        }
-      }
-
-      body {
-        margin: 0px;
-        padding: 0px;
-        background: #333333;
-        color: #f6f6f6;
-        font-size: 16px;
-      }
-
-      
-    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script src="js/scripts.js"></script>
   </head>
   <body>
-
     <div class="nav-side-menu">
-      <div class="brand"><img src="logo.png" width="40" height="40" />simple object validation API</div>
+      <div class="brand">
+        <img src="logo.png" width="80" height="80" />
+        <p style="font-weight: bold;">simple object validation</p>
+        <p><strong>API Docs</strong></p>
+      </div>
       <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
       <div class="menu-list">
         <div id="menu-content" class="menu-content collapse out">
-          <a href="#core" class="headline"><i class="fa fa-code"></i> Core</a>
+          <a href="#examples" class="headline"><i class="fa fa-code"></i> Examples</a>
+          <a href="#simple-registration-form">Simple registration form</a>
+
+          <a href="#validators" class="headline"><i class="fa fa-check"></i> Validators</a>
+          <a href="#is-required">isRequired</a>
+          <a href="#is-email">isEmail</a>
+          <a href="#is-alphanumeric">isAlphanumeric</a>
+          <a href="#is-numeric">isNumeric</a>
+          <a href="#is-integer">isInteger</a>
+          <a href="#is-between">isBetween</a>
+          <a href="#is-greater-than-or-equal">isGreaterThanOrEqual</a>
+          <a href="#is-less-than-or-equal">isLessThanOrEqual</a>
+          
+          <a href="#core" class="headline"><i class="fa fa-cube"></i> Core API</a>
           <a href="#validator">validator</a>
           <a href="#assemble">assemble</a>
           <a href="#chain">chain</a>
           <a href="#each">each</a>
           <a href="#match">match</a>
-          <a href="#validators" class="headline"><i class="fa fa-check-square-o"></i> Validators</a>
-          <a href="#is-required">isRequired</a>
         </div>
-     </div>
+      </div>
+    </div>
+    <div class="content">
 
-</div>
-<div class="content">
-  <h1>Core</h1>
-  <h2><a name="validator"></a>validator</h2>
-  <p>This function is used to create new validators.</p>
-</div>
+<!-- BEGIN CONTENT -->
 
-<script type="text/javascript">
-  $(window).on('hashchange', function(){
-    $('.nav-side-menu a').each(function() {
-      if($(this).attr('href') == window.location.hash) {
-        $(this).addClass('active')
-      } else {
-        $(this).removeClass('active')
-      }
-    })
-  }).trigger('hashchange')
-</script>
+<h1 id="examples" class="top">Examples</h1>
+
+<h2 id="simple-registration-form">Simple registration form</h2>
+
+<pre><code class="javascript">import { assemble, chain, isRequired, isInteger, isGreaterThanOrEqual, isEmail } from 'simple-object-validation'
+
+const isValidCustomer = assemble({
+  name: isRequired('Name'),
+  age: chain([
+    isRequired,
+    isInteger,
+    isGreaterThanOrEqual(18)
+  ])('Age'),
+  email: chain([
+    isRequired,
+    isEmail,
+  ])('Email'),
+})
+
+isValidCustomer({
+  age: 17,
+  email: 'foo'
+})
+// { name: 'Name is required.', age: 'Age must be greater than or equal 18.', email: 'Email must be a valid email address.' }
+
+isValidCustomer({
+  name: 'Mathew',
+  age: 18,
+  email: 'mathew@email.com'
+})
+// {}
+</code></pre>
+
+
+<h1 id="validators">Validators</h1>
+
+<h2 id="is-required">isRequired</h2>
+
+<p>...</p>
+
+<h2 id="is-email">isEmail</h2>
+
+<p>...</p>
+
+<h2 id="is-alphanumeric">isAlphanumeric</h2>
+
+<p>...</p>
+
+<h2 id="is-numeric">isNumeric</h2>
+
+<p>...</p>
+
+<h2 id="is-integer">isInteger</h2>
+
+<p>...</p>
+
+<h2 id="is-between">isBetween</h2>
+
+<p>...</p>
+
+<h2 id="is-greater-than-or-equal">isGreaterThanOrEqual</h2>
+
+<p>...</p>
+
+<h2 id="is-less-than-or-equal">isLessThanOrEqual</h2>
+
+<p>...</p>
+
+
+<h1 id="core">Core API</h1>
+
+<h2 id="validator">validator</h2>
+
+<div class="definition">
+  (checkFunction: <em>any => boolean</em>, messageCreator: <em>(param: <em>any</em>, name: <em>string</em>, value: <em>any</em>) => string</em>)
+  <br />=> (param: <em>any</em>) => (name: <em>string</em>) => (value: <em>any</em>) => string | undefined
+</div>
+<p>
+  Okay, okay! This looks difficult at first sight, definitely. But it totally makes sense. This is how it works:
+</p>
+<p>
+  In simple-object-validation every <strong>actual</strong> validation function takes a value as an argument and returns either undefined or an error message. It really is that simple. But in order to get to this simple function you will need to configure your wanted validation behaviour. This is done via higher order functions. These higher order functions are functions that return other functions. So for example:<br />
+</p>
+<pre><code class="javascript">import { validator } from 'simple-object-validation'
+
+// Example:
+const checkFunction = value => value === 42
+const messageCreator = (param, name, value) => `${name} must be the meaning of life!`
+const isMeaningOfLife = validator(checkFunction, messageCreator)
+
+isMeaningOfLife('Magic Number')(3.14) // 'Magic number must be the meaning of life'
+isMeaningOfLife('Magic Number')(42) // undefined
+</code></pre>
+
+<h2 id="assemble">assemble</h2>
+
+<p>This function is used to combine validators in order to validate whole objects.</p>
+<p>...</p>
+
+<h2 id="chain">chain</h2>
+
+<p>If there are several validators that need to be applied to a value, use the chain function.</p>
+<p>...</p>
+
+<h2 id="each">each</h2>
+
+<p>...</p>
+
+<h2 id="match">match</h2>
+
+<p>...</p>
+
+
+<!-- END CONTENT -->
+
+    </div>
+
+    <script type="text/javascript">
+     
+    </script>
   </body>
 </html>
