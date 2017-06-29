@@ -131,6 +131,33 @@
 	  }
 	});
 
+	var _isNumeric = __webpack_require__(11);
+
+	Object.defineProperty(exports, 'isNumeric', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_isNumeric).default;
+	  }
+	});
+
+	var _isAlphanumeric = __webpack_require__(12);
+
+	Object.defineProperty(exports, 'isAlphanumeric', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_isAlphanumeric).default;
+	  }
+	});
+
+	var _isInteger = __webpack_require__(13);
+
+	Object.defineProperty(exports, 'isInteger', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_isInteger).default;
+	  }
+	});
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
@@ -396,7 +423,7 @@
 	var isValueNumeric = exports.isValueNumeric = function isValueNumeric(value) {
 	  return !isNaN(parseFloat(value)) && isFinite(value);
 	};
-	var isValueAlphaNumeric = exports.isValueAlphaNumeric = function isValueAlphaNumeric(value) {
+	var isValueAlphanumeric = exports.isValueAlphanumeric = function isValueAlphanumeric(value) {
 	  return (/^[a-z0-9]+$/i.test(value)
 	  );
 	};
@@ -477,6 +504,86 @@
 	  return !(0, _utils.isValueEmpty)(value);
 	}, function (param, name) {
 	  return name + ' is required.';
+	});
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _validator = __webpack_require__(1);
+
+	var _validator2 = _interopRequireDefault(_validator);
+
+	var _utils = __webpack_require__(7);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = (0, _validator2.default)(function (value) {
+	  if ((0, _utils.isValueEmpty)(value)) return true;
+	  return (0, _utils.isValueNumeric)(value);
+	}, function (param, name) {
+	  return name + ' must be numeric.';
+	});
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _validator = __webpack_require__(1);
+
+	var _validator2 = _interopRequireDefault(_validator);
+
+	var _utils = __webpack_require__(7);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = (0, _validator2.default)(function (value) {
+	  if ((0, _utils.isValueEmpty)(value)) return true;
+	  if (typeof value === 'number' && isNaN(value)) return false;
+
+	  return (0, _utils.isValueAlphanumeric)(value);
+	}, function (param, name) {
+	  return name + ' must be alphanumeric.';
+	});
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _validator = __webpack_require__(1);
+
+	var _validator2 = _interopRequireDefault(_validator);
+
+	var _utils = __webpack_require__(7);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = (0, _validator2.default)(function (value) {
+	  if ((0, _utils.isValueEmpty)(value)) return true;
+	  if (!(0, _utils.isValueNumeric)(value)) return false;
+	  if (typeof value === 'string' && value.indexOf('.') > -1) return false;
+	  var floatValue = parseFloat(value);
+	  return Math.floor(floatValue) === floatValue;
+	}, function (param, name) {
+	  return name + ' must be an integer.';
 	});
 
 /***/ }

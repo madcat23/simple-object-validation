@@ -15,7 +15,7 @@ $('.menu-content a').click(function() {
   $(this).addClass('active')
 })
 
-$(window).on('scroll', function() {
+$(window).on('scroll', function(event) {
   var $headlines = $('h1[id], h2[id]')
   var $menuContent = $('#menu-content')
   var $navSideMenu = $('.nav-side-menu')
@@ -29,7 +29,7 @@ $(window).on('scroll', function() {
     var $headline = $(this)
     var headlineOffsetToViewport = $headline.offset().top - globalScrollPosition
 
-    if (headlineOffsetToViewport <= 0) {
+    if (headlineOffsetToViewport <= 5) {
       passedHeadlines.push(this)
     }
   })
