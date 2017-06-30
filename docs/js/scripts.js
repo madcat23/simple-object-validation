@@ -70,4 +70,49 @@ $(document).ready(function() {
   $('pre code').each(function(i, block) {
     hljs.highlightBlock(block)
   })
+
+  var allFunktions = [
+    ["isRequired","#is-required"],
+    ["isEmail","#is-email"],
+    ["isAlphanumeric","#is-alphanumeric"],
+    ["isNumeric","#is-numeric"],
+    ["isInteger","#is-integer"],
+    ["isBetween","#is-between"],
+    ["isGreaterThanOrEqual","#is-greater-than-or-equal"],
+    ["isLessThanOrEqual","#is-less-than-or-equal"],
+    ["chain","#chain"],
+    ["assemble","#assemble"],
+    ["validator","#validator"],
+  ]
+  for (var i = 0; i < allFunktions.length; i++) {
+    var funktion = allFunktions[i]
+    var text = funktion[0]
+    var link = funktion[1]
+    var regExp = new RegExp(text, 'g')
+    $('pre').each(function() {
+      var html = $(this).html()
+      var newHtml = html.replace(regExp, '<a data-href="' + link + '">' + text + '</a>')
+      var newPre = $('<pre>')
+      newPre.html(newHtml)
+      $(this).replaceWith(newPre)
+    })
+  }
+
+  $('pre a').on('click', function(event) {
+    event.preventDefault()
+    if ($('body').hasClass('control-key-down')) {
+      var href = $(this).attr('data-href')
+      //$(window).scrollTop($(href).offset().top)
+      window.location.hash = $(this).attr('data-href').substr(1)
+    }
+  })
+
+  $(document).keydown(function(e) {
+    if (e.ctrlKey || e.shiftKey) {
+      $('body').addClass('control-key-down')
+    }
+  })
+  $(document).keyup(function(e) {
+    $('body').removeClass('control-key-down')
+  })
 })
