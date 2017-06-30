@@ -52,18 +52,6 @@ $(window).on('scroll', function(event) {
       }
     }
   }
-
-  function myScroll(offset) {
-    if(window.scroll) {
-      window.scroll({
-        top: 2500, 
-        left: 0, 
-        behavior: 'smooth' 
-      });
-    } else {
-
-    }
-  }
 }).trigger('scroll')
 
 $(document).ready(function() {
@@ -84,6 +72,7 @@ $(document).ready(function() {
     ["assemble","#assemble"],
     ["validator","#validator"],
   ]
+
   for (var i = 0; i < allFunktions.length; i++) {
     var funktion = allFunktions[i]
     var text = funktion[0]
@@ -102,8 +91,12 @@ $(document).ready(function() {
     event.preventDefault()
     if ($('body').hasClass('control-key-down')) {
       var href = $(this).attr('data-href')
-      //$(window).scrollTop($(href).offset().top)
-      window.location.hash = $(this).attr('data-href').substr(1)
+
+      if (window.location.hash != href) {
+        window.location.hash = href
+      } else {
+        $(window).scrollTop($(href).offset().top)
+      }
     }
   })
 
