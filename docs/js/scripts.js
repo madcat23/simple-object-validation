@@ -87,6 +87,9 @@ $(document).ready(function() {
     })
   }
 
+  $('pre').wrap('<div class="pre-wrapper"></div>')
+  $('.pre-wrapper').append('<span class="pre-info-text"><i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp; Press CTRL and click on a function name to jump to its definition.</span>')
+
   $('pre a').on('click', function(event) {
     event.preventDefault()
     if ($('body').hasClass('control-key-down')) {

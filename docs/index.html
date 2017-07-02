@@ -27,7 +27,7 @@
           <a href="#examples" class="headline"><i class="fa fa-code"></i> Examples</a>
           <a href="#simple-registration-form">Simple registration form</a>
 
-          <a href="#validators" class="headline"><i class="fa fa-check"></i> Validators</a>
+          <a href="#validators" class="headline"><i class="fa fa-puzzle-piece"></i> Validators</a>
           <a href="#is-required">isRequired</a>
           <a href="#is-email">isEmail</a>
           <a href="#is-alphanumeric">isAlphanumeric</a>
@@ -122,25 +122,33 @@ isValidCustomer({
 <h1 id="core">Core API</h1>
 
 <h2 id="validator">validator</h2>
-
+<h3>Definition</h3>
 <div class="definition">
-  (checkFunction: <em>any => boolean</em>, messageCreator: <em>(param: <em>any</em>, name: <em>string</em>, value: <em>any</em>) => string</em>)
-  <br />=> (param: <em>any</em>) => (name: <em>string</em>) => (value: <em>any</em>) => string | undefined
+  (checkFunction: <em>(value: <em>any</em>, param: <em>any</em>) => boolean</em>, messageCreator: <em>(param: <em>any</em>, name: <em>string</em>, value: <em>any</em>) => string</em>)
+  <br />=> (param: <em>any</em>) => (name: <em>string</em>) => (value: <em>any</em>) => undefined | string
 </div>
 <p>
   Okay, okay! This looks difficult at first sight, definitely. But it totally makes sense. This is how it works:
 </p>
 <p>
-  In simple-object-validation every <strong>actual</strong> validation function takes a value as an argument and returns either undefined or an error message. It really is that simple. But in order to get to this simple function you will need to configure your wanted validation behaviour. This is done via higher order functions. These higher order functions are functions that return other functions. So for example:<br />
+  Let's start with line two of the definition which describes the validator that is created using validator().
+  Generally in simple-object-validation every validator first takes a <strong>configuration parameter</strong> to further specify its behaviour. This is going to return another function that waits for being called with the <strong>field name</strong>. That call however will return a function that finally wants to be called with a <strong>value</strong>. It will either return <strong>undefined</strong> or an <strong>error message</strong>.
+</p>
+<p>
+  BUT: You don't have to care about that at all. You only have to provide two functions (as you can see in line one). The first function (checkFunction) basically provides the validation logic while the second function (messageCreator) creates an error message based on the variables that are passed to the validator during the configuration process.
+</p>
+<p>
+  Just look at this example:
 </p>
 <pre><code class="javascript">import { validator } from 'simple-object-validation'
 
 // Example:
-const checkFunction = value => value === 42
-const messageCreator = (param, name, value) => `${name} must be the meaning of life!`
-const isMeaningOfLife = validator(checkFunction, messageCreator)
+const isMeaningOfLife = validator(
+  (value, param) => value === 42,
+  (param, name, value) => `${name} must be the meaning of life!`
+)
 
-isMeaningOfLife('Magic Number')(3.14) // 'Magic number must be the meaning of life'
+isMeaningOfLife('Magic Number')(3.14) // 'Magic Number must be the meaning of life'
 isMeaningOfLife('Magic Number')(42) // undefined
 </code></pre>
 
