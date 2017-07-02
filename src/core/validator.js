@@ -7,8 +7,11 @@ const regularValidator = (checker, messageCreator, nameTransformer, param) => na
   return undefined
 }
 
-// eslint-disable-next-line max-len
-const validator = (checker, { messageCreator, nameTransformer, expectParameter = false }) => param => {
+const validator = (checker, configParam) => param => {
+  // eslint-disable-next-line max-len
+  const { messageCreator: messageCreatorProperty, nameTransformer, expectParameter = false } = configParam
+  const messageCreator = typeof configParam === 'function' ? configParam : messageCreatorProperty
+
   if (typeof param === 'object') {
     const hasMessageCreatorParam = param.hasOwnProperty('messageCreator')
     const hasNameTransformerParam = param.hasOwnProperty('nameTransformer')

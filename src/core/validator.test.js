@@ -46,3 +46,9 @@ test('param can not be left away when expectParameter is true', () => {
   expect(incorrectValueIsTrue(false)).toBeInstanceOf(Function)
   expect(correctValueIsTrue(false)).toEqual(ERROR_MESSAGE)
 })
+
+test('Use message creator function instead of configuration object as the second parameter', () => {
+  const validate = validator(() => false, () => 'is false')
+
+  expect(validate('field')()).toEqual('is false')
+})
