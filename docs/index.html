@@ -142,7 +142,20 @@ isValidCustomer({
 </p>
 <pre><code class="javascript">import { validator } from 'simple-object-validation'
 
-// Example:
+const hasMinLength = validator(
+  (value, param) => value.length >= param,
+  (param, name, value) => `${name} must have a minimum length of ${param}!`
+)
+
+hasMinLength(4)('My string')('foo') // 'My string must have a minimum length of 4!'
+hasMinLength(4)('My string')('a longer string') // undefined
+</code></pre>
+<h3>Validator without configuration parameter</h3>
+<p>
+  But a configuration does not always make sense. In some cases you could just leave it away because it's optional or maybe you don't need it at all (e. g. isRequired). So if you call the validator directly with a field name instead this will be detected by the validator and it is going to behave like if it had been parameterized (with undefined!) before. You can see that in the following example:
+</p>
+<pre><code class="javascript">import { validator } from 'simple-object-validation'
+
 const isMeaningOfLife = validator(
   (value, param) => value === 42,
   (param, name, value) => `${name} must be the meaning of life!`
@@ -151,6 +164,29 @@ const isMeaningOfLife = validator(
 isMeaningOfLife('Magic Number')(3.14) // 'Magic Number must be the meaning of life'
 isMeaningOfLife('Magic Number')(42) // undefined
 </code></pre>
+<p>
+  As you can see, no configuration parameter was passed to the validator. Instead it was called directly with the field name. Like this you can have validators with parameters and ones without next to each other like in <a href="#simple-registration-form">this example</a>.
+</p>
+<h3 style="color: #ee6666;">Important note about strings as configuration parameters</h3>
+<p>
+  The validator detects a deliberately missing configuration parameter by testing for a <strong>string</strong>. So in this situation a string is always interpreted as the field name. If you want to use a string as a parameter you'll have to configure the validator like this:
+</p>
+<pre><code class="javascript">import { validator } from 'simple-object-validation'
+  
+const isEqualToString = validator(
+  (value, param) => value === param,
+  {
+    expectParameter: true,
+    messageCreator: (param, name, value) => `${name} must be equal to ${param}!`
+  }
+)
+
+isEqualToString('foo')('Foobar')('bar') // 'Foobar must be equal to foo'
+isEqualToString('foo')('Foobar')('foo') // undefined
+</code></pre>
+<p>
+  So there is one little disadvantage here: If you want to use strings as parameters you cannot make them optional.
+</p>
 
 <h2 id="assemble">assemble</h2>
 

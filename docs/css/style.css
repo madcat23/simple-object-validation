@@ -9,6 +9,15 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
 }
 
+a {
+  color: rgb(114, 203, 236);
+  text-decoration: none;
+}
+a:hover, a:focus {
+  color: rgb(114, 203, 236);
+  text-decoration: underline;
+}
+
 h1.top {
   margin-top: 0;
 }
