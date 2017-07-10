@@ -13,6 +13,15 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
     <script src="js/scripts.js"></script>
+
+    <style type='text/css'>
+    pre {
+      overflow-x: auto;
+    }
+    pre code {
+        white-space: pre;
+    }
+</style>
   </head>
   <body>
     <div class="nav-side-menu">
@@ -29,7 +38,6 @@
 
           <a href="#validators" class="headline"><i class="fa fa-puzzle-piece"></i> Validators</a>
           <a href="#is-required">isRequired</a>
-          <a href="#is-email">isEmail</a>
           <a href="#is-alphanumeric">isAlphanumeric</a>
           <a href="#is-numeric">isNumeric</a>
           <a href="#is-integer">isInteger</a>
@@ -38,11 +46,11 @@
           <a href="#is-less-than-or-equal">isLessThanOrEqual</a>
           
           <a href="#core" class="headline"><i class="fa fa-cube"></i> Core API</a>
-          <a href="#validator">validator</a>
           <a href="#assemble">assemble</a>
           <a href="#chain">chain</a>
           <a href="#each">each</a>
           <a href="#match">match</a>
+          <a href="#validator">validator</a>
         </div>
       </div>
     </div>
@@ -50,11 +58,15 @@
 
 <!-- BEGIN CONTENT -->
 
+
+
+
 <h1 id="examples" class="top">Examples</h1>
 
-<h2 id="simple-registration-form">Simple registration form</h2>
 
-<pre><code class="javascript">import { assemble, chain, isRequired, isInteger, isGreaterThanOrEqual, isEmail } from 'simple-object-validation'
+<!-- *************************************************************************************************************************** -->
+<h2 id="simple-registration-form">Simple registration form</h2>
+<pre><code class="javascript">import { assemble, chain, isRequired, isInteger, isGreaterThanOrEqual } from 'simple-object-validation'
 
 const isValidCustomer = assemble({
   name: isRequired('Name'),
@@ -63,65 +75,187 @@ const isValidCustomer = assemble({
     isInteger,
     isGreaterThanOrEqual(18)
   ])('Age'),
-  email: chain([
-    isRequired,
-    isEmail,
-  ])('Email'),
 })
 
-isValidCustomer({
-  age: 17,
-  email: 'foo'
-})
-// { name: 'Name is required.', age: 'Age must be greater than or equal 18.', email: 'Email must be a valid email address.' }
+isValidCustomer({ age: 17 }) // { name: 'Name is required.', age: 'Age must be greater than or equal 18.' }
 
-isValidCustomer({
-  name: 'Mathew',
-  age: 18,
-  email: 'mathew@email.com'
-})
-// {}
+isValidCustomer({ name: 'Mathew', age: 18 }) // {}
 </code></pre>
+<!-- *************************************************************************************************************************** -->
+
+
 
 
 <h1 id="validators">Validators</h1>
 
+
+<!-- *************************************************************************************************************************** -->
 <h2 id="is-required">isRequired</h2>
+<p>Checks if a value is set. That means if is not null, not undefined and not an empty String.</p>
+<pre><code class="javascript">import { isRequired } from 'simple-object-validation'
 
-<p>...</p>
+isRequired('Name')(null)      // 'Name is required.'
+isRequired('Name')(undefined) // 'Name is required.'
+isRequired('Name')('')        // 'Name is required.'
+isRequired('Name')(false)     // undefined
+isRequired('Name')(42)        // undefined
+isRequired('Name')('Mathew')  // undefined
+</code></pre>
+<!-- *************************************************************************************************************************** -->
 
-<h2 id="is-email">isEmail</h2>
 
-<p>...</p>
 
+<!-- *************************************************************************************************************************** -->
 <h2 id="is-alphanumeric">isAlphanumeric</h2>
+<p>Determines wether the given value is alphanumeric.</p>
+<pre><code class="javascript">import { isAlphanumeric } from 'simple-object-validation'
 
-<p>...</p>
+isAlphanumeric('Code')('...')      // 'Code must be alphanumeric.'
+isAlphanumeric('Code')('%$!')      // 'Code must be alphanumeric.'
+isAlphanumeric('Code')(' ')        // 'Code must be alphanumeric.'
+isAlphanumeric('Code')('a1B2c3D4') // undefined
+</code></pre>
+<!-- *************************************************************************************************************************** -->
 
+
+
+<!-- *************************************************************************************************************************** -->
 <h2 id="is-numeric">isNumeric</h2>
+<p>Determines wether the given value is numeric. Strings are allowed.</p>
+<pre><code class="javascript">import { isNumeric } from 'simple-object-validation'
 
-<p>...</p>
+isNumeric('Number')('abc')  // 'Number must be numeric.'
+isNumeric('Number')('%$!')  // 'Number must be numeric.'
+isNumeric('Number')(' ')    // 'Number must be numeric.'
+isNumeric('Number')(42)     // undefined
+isNumeric('Number')('42.0') // undefined
+</code></pre>
+<!-- *************************************************************************************************************************** -->
 
+
+
+<!-- *************************************************************************************************************************** -->
 <h2 id="is-integer">isInteger</h2>
+<p>Determines wether the given value is an integer. Strings are allowed.</p>
+<pre><code class="javascript">import { isInteger } from 'simple-object-validation'
 
-<p>...</p>
+isInteger('Number')('abc')  // 'Number must be an integer.'
+isInteger('Number')('%$!')  // 'Number must be an integer.'
+isInteger('Number')('1.')   // 'Number must be an integer.'
+isInteger('Number')('42.0') // 'Number must be an integer.'
+isInteger('Number')(42.0)   // undefined
+isInteger('Number')(42)     // undefined
+isInteger('Number')('42')   // undefined
+</code></pre>
+<!-- *************************************************************************************************************************** -->
 
+
+
+<!-- *************************************************************************************************************************** -->
 <h2 id="is-between">isBetween</h2>
+<p>Checks if a given value is between a minimum and a maximum value.</p>
+<pre><code class="javascript">import { isBetween } from 'simple-object-validation'
 
-<p>...</p>
+isBetween({ min: 0, max: 100 })('Percentage')('-1')  // 'Percentage must be between 0 and 100.'
+isBetween({ min: 0, max: 100 })('Percentage')(101)   // 'Percentage must be between 0 and 100.'
+isBetween({ min: 0, max: 100 })('Percentage')(100.1) // 'Percentage must be between 0 and 100.'
+isBetween({ min: 0, max: 100 })('Percentage')(42)    // undefined
+isBetween({ min: 0, max: 100 })('Percentage')('1')   // undefined
+</code></pre>
+<!-- *************************************************************************************************************************** -->
 
+
+
+<!-- *************************************************************************************************************************** -->
 <h2 id="is-greater-than-or-equal">isGreaterThanOrEqual</h2>
+<p>Checks if a given value is greater than or equal to another value.</p>
+<pre><code class="javascript">import { isGreaterThanOrEqual } from 'simple-object-validation'
 
-<p>...</p>
+isGreaterThanOrEqual(1)('Number')('-1') // 'Number must be greater than or equal to 1.'
+isGreaterThanOrEqual(1)('Number')(0)    // 'Number must be greater than 1.'
+isGreaterThanOrEqual(1)('Number')(1)    // undefined
+isGreaterThanOrEqual(1)('Number')(123)  // undefined
+</code></pre>
 
+
+
+<!-- *************************************************************************************************************************** -->
 <h2 id="is-less-than-or-equal">isLessThanOrEqual</h2>
+<p>Checks if a given value is less than or equal to another value.</p>
+<pre><code class="javascript">import { isLessThanOrEqual } from 'simple-object-validation'
 
-<p>...</p>
+isLessThanOrEqual(2048)('Number')('2500')  // 'Number must be less than or equal to 2048.'
+isLessThanOrEqual(2048)('Number')(1000000) // 'Number must be less than or equal to 2048.'
+isLessThanOrEqual(2048)('Number')(1)       // undefined
+isLessThanOrEqual(2048)('Number')(123)     // undefined
+</code></pre>
+<!-- *************************************************************************************************************************** -->
+
+
 
 
 <h1 id="core">Core API</h1>
 
+
+<!-- *************************************************************************************************************************** -->
+<h2 id="assemble">assemble</h2>
+<p>This function is used to combine validators in order to validate whole objects. Your input is an object with some values. Your output is an object with some error messages. You can also validate nested objects. The error messages will then be nested as well.</p>
+<pre><code class="javascript">import { assemble, isRequired, isInteger } from 'simple-object-validation'
+
+const isValidUser = assemble({
+  name: isRequired('Full name'),
+  age: isInteger('Age'),
+  address: assemble({
+    addressLine1: isRequired('Address Line 1'),
+    zipCode: isRequired('Zip code'),
+    city: isRequired('City'),
+  }),
+})
+
+isValidUser({ age: 17 }) // { name: 'Full name is required.', address: { addressLine1: 'Address Line 1 is required.', zipCode: 'Zip code is required.', city: 'City is required.' } }
+isValidUser({ name: 'Angela Merkel', age: 63, address: { addressLine1: 'Willy-Brandt-Straße 1', zipCode: '10557', city: 'Berlin' } }) // undefined
+</code></pre>
+<!-- *************************************************************************************************************************** -->
+
+
+
+<!-- *************************************************************************************************************************** -->
+<h2 id="chain">chain</h2>
+<p>If there are several validators that need to be applied to a value, you can use the chain function.</p>
+<pre><code class="javascript">import { chain, isRequired, isInteger, isGreaterThanOrEqual } from 'simple-object-validation'
+
+const isValidAge = chain([
+  isRequired,
+  isInteger,
+  isGreaterThanOrEqual(18)
+])
+
+isValidAge('Age')()    // 'Age is required.'
+isValidAge('Age')('a') // 'Age must be an integer.'
+isValidAge('Age')(17)  // 'Age must be greater than or equal to 18.'
+isValidAge('Age')(18)  // undefined
+</code></pre>
+<!-- *************************************************************************************************************************** -->
+
+
+
+<!-- *************************************************************************************************************************** -->
+<h2 id="each">each</h2>
+<p>...</p>
+<!-- *************************************************************************************************************************** -->
+
+
+
+<!-- *************************************************************************************************************************** -->
+<h2 id="match">match</h2>
+<p>...</p>
+<!-- *************************************************************************************************************************** -->
+
+
+
+<!-- *************************************************************************************************************************** -->
 <h2 id="validator">validator</h2>
+<p>You can use this function to create new validators. These validators can then be easily combined with assemble, chain, each and match.</p>
 <h3>Definition</h3>
 <div class="definition">
   (checkFunction: <em>(value: <em>any</em>, param: <em>any</em>) => boolean</em>, messageCreator: <em>(param: <em>any</em>, name: <em>string</em>, value: <em>any</em>) => string</em>)
@@ -187,27 +321,13 @@ isEqualToString('foo')('Foobar')('foo') // undefined
 <p>
   So there is one little disadvantage here: If you want to use strings as parameters you cannot make them optional.
 </p>
+<!-- *************************************************************************************************************************** -->
 
-<h2 id="assemble">assemble</h2>
-
-<p>This function is used to combine validators in order to validate whole objects.</p>
-<p>...</p>
-
-<h2 id="chain">chain</h2>
-
-<p>If there are several validators that need to be applied to a value, use the chain function.</p>
-<p>...</p>
-
-<h2 id="each">each</h2>
-
-<p>...</p>
-
-<h2 id="match">match</h2>
-
-<p>...</p>
 
 
 <!-- END CONTENT -->
+
+
 
     </div>
 

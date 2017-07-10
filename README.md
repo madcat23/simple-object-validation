@@ -13,7 +13,7 @@ The idea is to use only functions and no constraint configuration or something l
 ## Simple registration form
 
 ```javascript
-import { assemble, chain, isRequired, isInteger, isGreaterThanOrEqual, isEmail } from 'simple-object-validation'
+import { assemble, chain, isRequired, isInteger, isGreaterThanOrEqual } from 'simple-object-validation'
 
 const isValidCustomer = assemble({
   name: isRequired('Name'),
@@ -22,22 +22,16 @@ const isValidCustomer = assemble({
     isInteger,
     isGreaterThanOrEqual(18)
   ])('Age'),
-  email: chain([
-    isRequired,
-    isEmail,
-  ])('Email'),
 })
 
 isValidCustomer({
   age: 17,
-  email: 'foo'
 })
-// { name: 'Name is required.', age: 'Age must be greater than or equal 18.', email: 'Email must be a valid email address.' }
+// { name: 'Name is required.', age: 'Age must be greater than or equal 18.' }
 
 isValidCustomer({
   name: 'Mathew',
   age: 18,
-  email: 'mathew@email.com'
 })
 // {}
 ```
