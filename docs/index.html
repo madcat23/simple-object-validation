@@ -31,10 +31,11 @@
         <p><strong>API Docs</strong></p>
       </div>
       <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
-      <div class="menu-list">
+      <div class="menu-list" style="padding-bottom: 20px;">
         <div id="menu-content" class="menu-content collapse out">
           <a href="#examples" class="headline"><i class="fa fa-code"></i> Examples</a>
           <a href="#simple-registration-form">Simple registration form</a>
+          <a href="#i18n">I18n</a>
 
           <a href="#validators" class="headline"><i class="fa fa-puzzle-piece"></i> Validators</a>
           <a href="#is-required">isRequired</a>
@@ -44,6 +45,7 @@
           <a href="#is-between">isBetween</a>
           <a href="#is-greater-than-or-equal">isGreaterThanOrEqual</a>
           <a href="#is-less-than-or-equal">isLessThanOrEqual</a>
+          <a href="#bring-your-own-validator">Bring your own validator</a>
           
           <a href="#core" class="headline"><i class="fa fa-cube"></i> Core API</a>
           <a href="#assemble">assemble</a>
@@ -80,6 +82,37 @@ const isValidCustomer = assemble({
 isValidCustomer({ age: 17 }) // { name: 'Name is required.', age: 'Age must be greater than or equal 18.' }
 
 isValidCustomer({ name: 'Mathew', age: 18 }) // {}
+</code></pre>
+<!-- *************************************************************************************************************************** -->
+
+
+<!-- *************************************************************************************************************************** -->
+<h2 id="i18n">I18n</h2>
+<p>This is how you can use an internationalization library like <a target="_blank" href="https://github.com/i18next/i18next">i18next</a> in combination with simple-object-validation. Every validator can be called with a configuration object that contains a messageCreator and an optional nameTransformer property. This call will return a <strong>new validator</strong> that has the same behaviour as the original one, but will return an internationalized error message.</p>
+<pre><code class="javascript">import { isRequired, isGreaterThanOrEqual } from 'simple-object-validation'
+import i18next from 'i18next'
+
+const nameTransformer = name => i18next.t(name)
+
+const i18n_required = isRequired({
+  messageCreator: (param, name, value) => i18next.t('{{name}} is required.', { name }), nameTransformer
+})
+
+const i18n_greaterThanOrEqual = isGreaterThanOrEqual({
+  messageCreator: (param, name, value) => i18next.t('{{name}} must be greater than or equal to {{param}}.', { name, param }), nameTransformer
+})
+
+export { 
+  i18n_required as isRequired,
+  i18n_greaterThanOrEqual as isGreaterThanOrEqual
+}
+
+
+import { isRequired, isGreaterThanOrEqual } from './i18n-validation'
+
+isRequired('Zip code')('')            // 'Feld Postleitzahl ist ein Pflichtfeld.'
+isGreaterThanOrEqual(18)('Age')('17') // 'Feld Alter muss größer oder gleich 18 sein.'
+
 </code></pre>
 <!-- *************************************************************************************************************************** -->
 
@@ -189,6 +222,32 @@ isLessThanOrEqual(2048)('Number')(1000000) // 'Number must be less than or equal
 isLessThanOrEqual(2048)('Number')(1)       // undefined
 isLessThanOrEqual(2048)('Number')(123)     // undefined
 </code></pre>
+<!-- *************************************************************************************************************************** -->
+
+
+
+<!-- *************************************************************************************************************************** -->
+<h2 id="bring-your-own-validator">Bring your own validator</h2>
+<p>You can easily build your own validators using the built-in <a href="#validator">validator</a> factory function.</p>
+<pre><code class="javascript">import { validator } from 'simple-object-validation'
+
+// without parameter:
+const containsLetterA = validator(
+  (value, param) => value.toLowerCase().indexOf('a') > -1,
+  (param, name, value) => `${name} does not contain letter A.`
+)
+
+// with parameter:
+const containsLetter = validator(
+  (value, param) => value.toLowerCase().indexOf(param.toLowerCase()) > -1,
+  (param, name, value) => `${name} does not contain letter ${param.toUpperCase()}.`
+)
+
+containsLetterA('Field X')('foo')     // 'Field X does not contain letter A.'
+containsLetter('y')('Field X')('bar') // 'Field X does not contain letter Y.'
+
+</code></pre>
+<p>See <a href="#validator">validator</a> for more information.</p>
 <!-- *************************************************************************************************************************** -->
 
 
