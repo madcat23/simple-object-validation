@@ -248,6 +248,28 @@ containsLetter('y')('Field X')('bar') // 'Field X does not contain letter Y.'
 
 </code></pre>
 <p>See <a href="#validator">validator</a> for more information.</p>
+<p style="margin-top: 30px;">Or you can just use a pure javascript function and plug it in:</p>
+<pre><code class="javascript">import { assemble, isRequired } from 'simple-object-validation'
+import { isCool } from './custom-validation'
+
+const validate = assemble({
+  property1: isRequired('Property 1'),
+  property2: value => {
+    if (!value) {
+      return 'You should really enter something cool here.'
+    } else if (!isCool(value)) {
+      return 'Oh, come on! That is not a cool value!'
+    }
+    return undefined
+  },
+})
+
+validate({})                                                          // { property1: 'Property 1 is required.', property2: 'You should really enter something cool here.' }
+validate({ property1: 'bar' })                                        // { property2: 'You should really enter something cool here.' }
+validate({ property1: 'bar', property2: 'foo' })                      // { property2: 'Oh, come on! That is not a cool value!' }
+validate({ property1: 'bar', property2: 'simple-object-validation' }) // {}
+
+</code></pre>
 <!-- *************************************************************************************************************************** -->
 
 
