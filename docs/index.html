@@ -241,14 +241,33 @@ isValidAge('Age')(18)  // undefined
 
 <!-- *************************************************************************************************************************** -->
 <h2 id="each">each</h2>
-<p>...</p>
+<p>If you want to validate an array of values you can use each.</p>
+<pre><code class="javascript">import { each, isAlphanumeric } from 'simple-object-validation'
+
+const isValidCodeArray = each(i => isAlphanumeric(`Code number ${i + 1}`))
+
+isValidCodeArray(['123456Seven', '%!()', '42']) // [undefined, 'Code number 2 must be alphanumeric.', undefined]
+isValidCodeArray(['123456Seven', 'abc', '42'])  // [undefined, undefined, undefined]
+</code></pre>
 <!-- *************************************************************************************************************************** -->
 
 
 
 <!-- *************************************************************************************************************************** -->
 <h2 id="match">match</h2>
-<p>...</p>
+<p>If you want to map each value of an array to a specific validator, you can use match.</p>
+<pre><code class="javascript">import { match, isRequired, isNumeric, isGreaterThanOrEqual, isLessThanOrEqual } from 'simple-object-validation'
+
+const isValidTuple = match([
+  isRequired('Value 1'),
+  isNumeric('Value 2'),
+  isGreaterThanOrEqual(0)('Value 3'),
+  isLessThanOrEqual(10)('Value 4'),
+])
+
+isValidTuple([undefined, '%!()', '0', '42']) // ['Value 1 is required.', 'Value 2 must be numeric.', undefined, 'Value 4 must be less than or equal to 10.']
+isValidTuple(['foo', '1', '1', '1'])         // [undefined, undefined, undefined, undefined]
+</code></pre>
 <!-- *************************************************************************************************************************** -->
 
 

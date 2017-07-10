@@ -69,6 +69,8 @@ $(document).ready(function() {
     ["isGreaterThanOrEqual","#is-greater-than-or-equal"],
     ["isLessThanOrEqual","#is-less-than-or-equal"],
     ["chain","#chain"],
+    ["each","#each"],
+    ["match","#match"],
     ["assemble","#assemble"],
     ["validator","#validator"],
   ]
