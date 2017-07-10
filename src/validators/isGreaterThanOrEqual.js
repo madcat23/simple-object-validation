@@ -6,4 +6,4 @@ export default validator((value, param) => {
   if (!isValueNumeric(value)) return false
 
   return value >= param
-}, (param, name) => `${name} must be greater than or equal ${param}.`)
+}, (param, name) => `${name} must be greater than or equal to ${param}.`)

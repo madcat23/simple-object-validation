@@ -14,7 +14,7 @@
     "url": "git+https://github.com/madcat23/simple-object-validation.git"
   },
   "author": "madcat23",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/madcat23/simple-object-validation/issues"
   },

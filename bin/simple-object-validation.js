@@ -185,13 +185,16 @@
 	  };
 	};
 
-	// eslint-disable-next-line max-len
-	var validator = function validator(checker, _ref) {
-	  var messageCreator = _ref.messageCreator,
-	      nameTransformer = _ref.nameTransformer,
-	      _ref$expectParameter = _ref.expectParameter,
-	      expectParameter = _ref$expectParameter === undefined ? false : _ref$expectParameter;
+	var validator = function validator(checker, configParam) {
 	  return function (param) {
+	    // eslint-disable-next-line max-len
+	    var messageCreatorProperty = configParam.messageCreator,
+	        nameTransformer = configParam.nameTransformer,
+	        _configParam$expectPa = configParam.expectParameter,
+	        expectParameter = _configParam$expectPa === undefined ? false : _configParam$expectPa;
+
+	    var messageCreator = typeof configParam === 'function' ? configParam : messageCreatorProperty;
+
 	    if ((typeof param === 'undefined' ? 'undefined' : _typeof(param)) === 'object') {
 	      var hasMessageCreatorParam = param.hasOwnProperty('messageCreator');
 	      var hasNameTransformerParam = param.hasOwnProperty('nameTransformer');
@@ -405,7 +408,7 @@
 
 	  return value >= param;
 	}, function (param, name) {
-	  return name + ' must be greater than or equal ' + param + '.';
+	  return name + ' must be greater than or equal to ' + param + '.';
 	});
 
 /***/ },
@@ -452,7 +455,7 @@
 
 	  return value <= param;
 	}, function (param, name) {
-	  return name + ' must be less than or equal ' + param + '.';
+	  return name + ' must be less than or equal to ' + param + '.';
 	});
 
 /***/ },

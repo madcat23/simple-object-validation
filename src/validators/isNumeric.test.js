@@ -33,9 +33,19 @@ test('integer value -> OK', () => {
   expect(isNumeric(-1000)).toBeUndefined()
 })
 
+test('integer value as string -> OK', () => {
+  expect(isNumeric('1000')).toBeUndefined()
+  expect(isNumeric('-1000')).toBeUndefined()
+})
+
 test('float value -> OK', () => {
   expect(isNumeric(1.001)).toBeUndefined()
   expect(isNumeric(-1.001)).toBeUndefined()
+})
+
+test('float value as string -> OK', () => {
+  expect(isNumeric('1.001')).toBeUndefined()
+  expect(isNumeric('-1.001')).toBeUndefined()
 })
 
 test('undefined -> OK', () => {
