@@ -6,7 +6,13 @@ simple-object-validation is a lightweight validation library that enables a func
 ## Code over configuration
 The idea is to use only functions and no constraint configuration or something like that. Typically in a more sophisticated web application user input validation can easily become very complex and specific. So there will be the need of writing custom validation code. You should always be able to easily plug your custom code into the standard library code without having to configure and register stuff intransparently somewhere else.
 
-[API Docs](https://madcat23.github.io/simple-object-validation/)
+### [API Docs](https://madcat23.github.io/simple-object-validation/)
+
+## Installation
+
+```
+npm install --save simple-object-validation
+```
 
 # Examples
 
