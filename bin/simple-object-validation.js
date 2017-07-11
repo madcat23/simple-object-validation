@@ -360,9 +360,12 @@
 
 	exports.default = function (validators) {
 	  return function (values) {
-	    return values.map(function (value, index) {
-	      return validators[index](value);
-	    });
+	    if (Array.isArray(values)) {
+	      return values.map(function (value, index) {
+	        return validators[index](value);
+	      });
+	    }
+	    return [];
 	  };
 	};
 
@@ -378,9 +381,12 @@
 
 	exports.default = function (getValidator) {
 	  return function (values) {
-	    return values.map(function (value, index) {
-	      return getValidator(index)(value);
-	    });
+	    if (Array.isArray(values)) {
+	      return values.map(function (value, index) {
+	        return getValidator(index)(value);
+	      });
+	    }
+	    return [];
 	  };
 	};
 

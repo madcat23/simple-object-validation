@@ -1,1 +1,6 @@
-export default getValidator => values => values.map((value, index) => getValidator(index)(value))
+export default getValidator => values => {
+  if (Array.isArray(values)) {
+    return values.map((value, index) => getValidator(index)(value))
+  }
+  return []
+}
