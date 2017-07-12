@@ -41,6 +41,33 @@ isValidCustomer({
 })
 // {}
 ```
+## I18n example
+
+```javascript
+import { isRequired, isGreaterThanOrEqual } from 'simple-object-validation'
+import i18next from 'i18next'
+
+const nameTransformer = name => i18next.t(name)
+
+const i18n_required = isRequired({
+  messageCreator: (param, name, value) => i18next.t('{{name}} is required.', { name }), nameTransformer
+})
+
+const i18n_greaterThanOrEqual = isGreaterThanOrEqual({
+  messageCreator: (param, name, value) => i18next.t('{{name}} must be greater than or equal to {{param}}.', { name, param }), nameTransformer
+})
+
+export { 
+  i18n_required as isRequired,
+  i18n_greaterThanOrEqual as isGreaterThanOrEqual
+}
+
+
+import { isRequired, isGreaterThanOrEqual } from './i18n-validation'
+
+isRequired('Zip code')('')            // 'Feld Postleitzahl ist ein Pflichtfeld.'
+isGreaterThanOrEqual(18)('Age')('17') // 'Feld Alter muss größer oder gleich 18 sein.'
+```
 
 ## Integrate with Redux Form
 
@@ -58,3 +85,10 @@ export default reduxForm({
 })(CustomerRegistrationComponent)
 ```
 See detailed information on how to use Redux Form's validation API at http://redux-form.com > Examples
+
+## Coming soon
+* immutable.js support
+* More examples
+
+## Thanks
+This library was heavily inspired by [jfairbank/revalidate](https://github.com/jfairbank/revalidate)
