@@ -1,5 +1,15 @@
-export default (validators, options) => value => {
+const evaluateParams = params => params.reduce((acc, value, index, array) => {
+  if (index === array.length - 1 && typeof value === 'object') {
+    return { ...acc, options: value }
+  }
+  return { ...acc, reducers: [...acc.reducers, value] }
+}, { reducers: [] })
+
+export default (validators, ...params) => value => {
+  const { reducers, options } = evaluateParams(params)
+
   const valueIsUndefined = typeof value === 'undefined' || value == null
+
   /*
    * In some cases it can be ok if the object that should be validated is undefined.
    * But this should be specified with a flag (ignoreIfMissing).
@@ -45,6 +55,10 @@ export default (validators, options) => value => {
         result[property] = validationResult
       }
     }
+  }
+
+  if (reducers.length > 0) {
+    return reducers.reduce((acc, reducer) => reducer(value, acc), result)
   }
   return result
 }

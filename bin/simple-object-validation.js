@@ -248,11 +248,33 @@
 	  value: true
 	});
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-	exports.default = function (validators, options) {
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+	var evaluateParams = function evaluateParams(params) {
+	  return params.reduce(function (acc, value, index, array) {
+	    if (index === array.length - 1 && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object') {
+	      return _extends({}, acc, { options: value });
+	    }
+	    return _extends({}, acc, { reducers: [].concat(_toConsumableArray(acc.reducers), [value]) });
+	  }, { reducers: [] });
+	};
+
+	exports.default = function (validators) {
+	  for (var _len = arguments.length, params = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	    params[_key - 1] = arguments[_key];
+	  }
+
 	  return function (value) {
+	    var _evaluateParams = evaluateParams(params),
+	        reducers = _evaluateParams.reducers,
+	        options = _evaluateParams.options;
+
 	    var valueIsUndefined = typeof value === 'undefined' || value == null;
+
 	    /*
 	     * In some cases it can be ok if the object that should be validated is undefined.
 	     * But this should be specified with a flag (ignoreIfMissing).
@@ -296,6 +318,12 @@
 	          result[property] = validationResult;
 	        }
 	      }
+	    }
+
+	    if (reducers.length > 0) {
+	      return reducers.reduce(function (acc, reducer) {
+	        return reducer(value, acc);
+	      }, result);
 	    }
 	    return result;
 	  };

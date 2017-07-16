@@ -79,7 +79,8 @@ it('should ignore missing nested values when configured to do so', () => {
     age: required,
     permissions: assemble({
       create: required,
-    }, { ignoreIfMissing: true }),
+    },
+    { ignoreIfMissing: true }),
   })
 
   const value = {
@@ -87,6 +88,41 @@ it('should ignore missing nested values when configured to do so', () => {
   }
 
   expect(validate(value)).toEqual({
+    age: ERROR_MESSAGE,
+  })
+})
+
+it('should apply given reducers', () => {
+  const emailIsEqualToRepeatedEmail = (value, result) => {
+    if (value.email !== value.repeatEmail) {
+      return { ...result, repeatEmail: ERROR_MESSAGE }
+    }
+    return result
+  }
+
+  const validate = assemble(
+    {
+      name: required,
+      age: required,
+    },
+    emailIsEqualToRepeatedEmail
+  )
+
+  expect(validate({ name: 'Matthias' })).toEqual({
+    age: ERROR_MESSAGE,
+  })
+
+  expect(validate({ name: 'Matthias', email: 'foo@bar.com' })).toEqual({
+    age: ERROR_MESSAGE,
+    repeatEmail: ERROR_MESSAGE,
+  })
+
+  expect(validate({ name: 'Matthias', email: 'foo@bar.com', repeatEmail: 'bar@foo.com' })).toEqual({
+    age: ERROR_MESSAGE,
+    repeatEmail: ERROR_MESSAGE,
+  })
+
+  expect(validate({ name: 'Matthias', email: 'foo@bar.com', repeatEmail: 'foo@bar.com' })).toEqual({
     age: ERROR_MESSAGE,
   })
 })
