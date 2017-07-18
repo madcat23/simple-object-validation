@@ -5,7 +5,7 @@ const evaluateParams = params => params.reduce((acc, value, index, array) => {
   return { ...acc, reducers: [...acc.reducers, value] }
 }, { reducers: [] })
 
-export default (validators, ...params) => value => {
+export default (validators, ...params) => (value, allValues) => {
   const { reducers, options } = evaluateParams(params)
 
   const valueIsUndefined = typeof value === 'undefined' || value == null
@@ -39,8 +39,11 @@ export default (validators, ...params) => value => {
       }
       // else nestedValue = undefined
 
+      // allValues given as parameter? If not, use given value object
+      const allValuesForValidator = typeof allValues === 'object' ? allValues : value
+
       // validate value:
-      const validationResult = eachValidator(nestedValue)
+      const validationResult = eachValidator(nestedValue, allValuesForValidator)
       if (typeof validationResult === 'function') {
         throw new Error(`Error validating ${property}. Validation result is a function. 
           Maybe a validator has not been correctly parameterized (param, field name, etc.) ...`)

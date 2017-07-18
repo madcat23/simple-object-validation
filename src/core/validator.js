@@ -1,8 +1,8 @@
-const regularValidator = (checker, messageCreator, nameTransformer, param) => name => value => {
+const regularValidator = (checker, messageCreator, nameTransformer, param) => name => (value, allValues) => {
   const fieldName = nameTransformer ? nameTransformer(name) : name
-  if (!checker(value, param)) {
+  if (!checker(value, param, allValues)) {
     if (!messageCreator) throw new Error('No messageCreator given for validator.')
-    return messageCreator(param, fieldName, value)
+    return messageCreator(param, fieldName, value, allValues)
   }
   return undefined
 }

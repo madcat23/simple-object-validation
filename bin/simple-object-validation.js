@@ -158,6 +158,15 @@
 	  }
 	});
 
+	var _isRequiredIf = __webpack_require__(14);
+
+	Object.defineProperty(exports, 'isRequiredIf', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_isRequiredIf).default;
+	  }
+	});
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
@@ -174,11 +183,11 @@
 
 	var regularValidator = function regularValidator(checker, messageCreator, nameTransformer, param) {
 	  return function (name) {
-	    return function (value) {
+	    return function (value, allValues) {
 	      var fieldName = nameTransformer ? nameTransformer(name) : name;
-	      if (!checker(value, param)) {
+	      if (!checker(value, param, allValues)) {
 	        if (!messageCreator) throw new Error('No messageCreator given for validator.');
-	        return messageCreator(param, fieldName, value);
+	        return messageCreator(param, fieldName, value, allValues);
 	      }
 	      return undefined;
 	    };
@@ -268,7 +277,7 @@
 	    params[_key - 1] = arguments[_key];
 	  }
 
-	  return function (value) {
+	  return function (value, allValues) {
 	    var _evaluateParams = evaluateParams(params),
 	        reducers = _evaluateParams.reducers,
 	        options = _evaluateParams.options;
@@ -303,8 +312,11 @@
 	        }
 	        // else nestedValue = undefined
 
+	        // allValues given as parameter? If not, use given value object
+	        var allValuesForValidator = (typeof allValues === 'undefined' ? 'undefined' : _typeof(allValues)) === 'object' ? allValues : value;
+
 	        // validate value:
-	        var validationResult = eachValidator(nestedValue);
+	        var validationResult = eachValidator(nestedValue, allValuesForValidator);
 	        if (typeof validationResult === 'function') {
 	          throw new Error('Error validating ' + property + '. Validation result is a function. \n          Maybe a validator has not been correctly parameterized (param, field name, etc.) ...');
 	        }
@@ -342,7 +354,7 @@
 	// TODO: allow multiple results?
 	exports.default = function (validators) {
 	  return function (name) {
-	    return function (value) {
+	    return function (value, allValues) {
 	      var _iteratorNormalCompletion = true;
 	      var _didIteratorError = false;
 	      var _iteratorError = undefined;
@@ -351,7 +363,7 @@
 	        for (var _iterator = validators[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 	          var validator = _step.value;
 
-	          var result = validator(name)(value);
+	          var result = validator(name)(value, allValues);
 	          if (typeof result === 'string') {
 	            return result;
 	          }
@@ -387,10 +399,10 @@
 	});
 
 	exports.default = function (validators) {
-	  return function (values) {
+	  return function (values, allValues) {
 	    if (Array.isArray(values)) {
 	      return values.map(function (value, index) {
-	        return validators[index](value);
+	        return validators[index](value, allValues);
 	      });
 	    }
 	    return [];
@@ -408,10 +420,10 @@
 	});
 
 	exports.default = function (getValidator) {
-	  return function (values) {
+	  return function (values, allValues) {
 	    if (Array.isArray(values)) {
 	      return values.map(function (value, index) {
-	        return getValidator(index)(value);
+	        return getValidator(index)(value, allValues);
 	      });
 	    }
 	    return [];
@@ -622,6 +634,97 @@
 	}, function (param, name) {
 	  return name + ' must be an integer.';
 	});
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _utils = __webpack_require__(7);
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+	var defaultMessageCreator = function defaultMessageCreator(fieldName1, fieldName2) {
+	  return fieldName1 + ' is required when ' + fieldName2 + ' is given.';
+	};
+
+	// eslint-disable-next-line max-len
+	var regularIsRequiredIf = function regularIsRequiredIf(property1, name1, property2, name2) {
+	  var messageCreator = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : defaultMessageCreator;
+	  var nameTransformer = arguments[5];
+	  return function (value, result) {
+	    if (typeof value === 'undefined') {
+	      return result;
+	    }
+
+	    var fieldName1 = nameTransformer ? nameTransformer(name1) : name1;
+	    var fieldName2 = nameTransformer ? nameTransformer(name2) : name2;
+
+	    var value1 = value[property1];
+	    var value2 = value[property2];
+
+	    if (!(0, _utils.isValueEmpty)(value2) && (0, _utils.isValueEmpty)(value1)) {
+	      return _extends({}, result, _defineProperty({}, property1, messageCreator(fieldName1, fieldName2, value1, value2)));
+	    }
+	    return result;
+	  };
+	};
+
+	var isRequiredIf = function isRequiredIf(param1, param2) {
+	  /*
+	   * Called to override messageCreator and/or nameTransformer function
+	   */
+	  if (!Array.isArray(param1) && (typeof param1 === 'undefined' ? 'undefined' : _typeof(param1)) === 'object') {
+	    var _ret = function () {
+	      var messageCreator = param1.messageCreator ? param1.messageCreator : undefined;
+	      var nameTransformer = param1.nameTransformer ? param1.nameTransformer : undefined;
+
+	      // eslint-disable-next-line max-len
+	      return {
+	        v: function v(_ref, _ref2) {
+	          var _ref4 = _slicedToArray(_ref, 2),
+	              p1 = _ref4[0],
+	              n1 = _ref4[1];
+
+	          var _ref3 = _slicedToArray(_ref2, 2),
+	              p2 = _ref3[0],
+	              n2 = _ref3[1];
+
+	          return regularIsRequiredIf(p1, n1, p2, n2, messageCreator, nameTransformer);
+	        }
+	      };
+	    }();
+
+	    if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+	  }
+
+	  /*
+	   * Called in a regular way
+	   */
+
+	  var _param = _slicedToArray(param1, 2),
+	      property1 = _param[0],
+	      name1 = _param[1];
+
+	  var _param2 = _slicedToArray(param2, 2),
+	      property2 = _param2[0],
+	      name2 = _param2[1];
+
+	  return regularIsRequiredIf(property1, name1, property2, name2, undefined, undefined);
+	};
+
+	exports.default = isRequiredIf;
 
 /***/ }
 /******/ ])));

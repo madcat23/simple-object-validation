@@ -1,6 +1,6 @@
-export default validators => values => {
+export default validators => (values, allValues) => {
   if (Array.isArray(values)) {
-    return values.map((value, index) => validators[index](value))
+    return values.map((value, index) => validators[index](value, allValues))
   }
   return []
 }
