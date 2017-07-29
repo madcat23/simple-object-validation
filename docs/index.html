@@ -262,13 +262,13 @@ isLessThanOrEqual(2048)('Number')(123)     // undefined
 
 // without parameter:
 const containsLetterA = validator(
-  (value, param) => value.toLowerCase().indexOf('a') > -1,
+  (value, param) => value && value.toLowerCase().indexOf('a') > -1,
   (param, name, value) => `${name} does not contain letter A.`
 )
 
 // with parameter:
 const containsLetter = validator(
-  (value, param) => value.toLowerCase().indexOf(param.toLowerCase()) > -1,
+  (value, param) => value && value.toLowerCase().indexOf(param.toLowerCase()) > -1,
   {
     expectParameter: true, // this option is only mandatory when the parameter is a string (see validator for more information)
     messageCreator: (param, name, value) => `${name} does not contain letter ${param.toUpperCase()}.`
