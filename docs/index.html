@@ -269,7 +269,10 @@ const containsLetterA = validator(
 // with parameter:
 const containsLetter = validator(
   (value, param) => value.toLowerCase().indexOf(param.toLowerCase()) > -1,
-  (param, name, value) => `${name} does not contain letter ${param.toUpperCase()}.`
+  {
+    expectParameter: true, // this option is only mandatory when the parameter is a string (see validator for more information)
+    messageCreator: (param, name, value) => `${name} does not contain letter ${param.toUpperCase()}.`
+  }
 )
 
 containsLetterA('Field X')('foo')     // 'Field X does not contain letter A.'
