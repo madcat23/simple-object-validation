@@ -126,3 +126,16 @@ it('should apply given reducers', () => {
     age: ERROR_MESSAGE,
   })
 })
+
+it('should propagate allValues to every validator', () => {
+  const isEqualToFoo = (value, allValues) => (allValues.foo !== value ? ERROR_MESSAGE: undefined)
+
+  const validate = assemble({
+    foo: required,
+    bar: assemble({
+      baz: isEqualToFoo,
+    }),
+  })
+
+  expect(validate({ foo: 'foobar', bar: { baz: 'foobar' } })).toEqual({})
+})

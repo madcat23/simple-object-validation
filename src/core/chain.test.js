@@ -24,3 +24,13 @@ it('should chain different validators and return the right error message for eac
   // The input is ok:
   expect(validate('Matt')).toBeUndefined()
 })
+
+it('should take allValues into account', () => {
+  const validate = () => (value, allValues) => (value.indexOf(allValues.foo) > -1 ? undefined : 'ERROR')
+  const allValues = { foo: 'bar' }
+
+  const validateFoo = chain([containsLetterA, validate])('Name')
+
+  expect(validateFoo('bar1', allValues)).toEqual(undefined)
+  expect(validateFoo('bra1', allValues)).toEqual('ERROR')
+})

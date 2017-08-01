@@ -24,3 +24,16 @@ it('should call the right validator for each array value', () => {
     undefined,
   ])
 })
+
+it('should take allValues into account', () => {
+  const validate = (value, allValues) => (value.indexOf(allValues.foo) > -1 ? undefined : 'ERROR')
+  const allValues = { foo: 'bar' }
+
+  const validateArray = match([
+    validate,
+    validate,
+  ])
+
+  expect(validateArray(['bar1', 'bar2'], allValues)).toEqual([undefined, undefined])
+  expect(validateArray(['bar1', 'b2ar'], allValues)).toEqual([undefined, 'ERROR'])
+})

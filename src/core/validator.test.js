@@ -52,3 +52,10 @@ test('Use message creator function instead of configuration object as the second
 
   expect(validate('field')()).toEqual('is false')
 })
+
+it('should take allValues into account', () => {
+  const validate = validator((value, param, allValues) => allValues.foo === value, () => ERROR_MESSAGE)
+
+  expect(validate('Name')('bar', { foo: 'bar' })).toBeUndefined()
+  expect(validate('Name')('bar', { foo: 'baz' })).toEqual(ERROR_MESSAGE)
+})
