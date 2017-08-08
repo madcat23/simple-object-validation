@@ -167,6 +167,15 @@
 	  }
 	});
 
+	var _utils = __webpack_require__(7);
+
+	Object.defineProperty(exports, 'containsError', {
+	  enumerable: true,
+	  get: function get() {
+	    return _utils.containsError;
+	  }
+	});
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
@@ -495,12 +504,35 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	// TODO: FINISH!
-	var containsErrors = exports.containsErrors = function containsErrors(obj) {
-	  if (typeof obj === 'undefined') {
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	var containsError = exports.containsError = function containsError(something) {
+	  if (typeof something === 'undefined') {
 	    return false;
 	  }
-	  return false;
+	  if (Array.isArray(something)) {
+	    var arrayContainsErrors = something.find(function (element) {
+	      return containsError(element);
+	    });
+	    if (typeof arrayContainsErrors !== 'undefined') {
+	      return true;
+	    }
+	  }
+	  if ((typeof something === 'undefined' ? 'undefined' : _typeof(something)) === 'object') {
+	    var foundError = false;
+	    for (var property in something) {
+	      if (something.hasOwnProperty(property)) {
+	        var value = something[property];
+	        if (containsError(value)) {
+	          foundError = true;
+	          break;
+	        }
+	      }
+	    }
+	    return foundError;
+	  }
+	  return true;
 	};
 
 	var isValueEmpty = exports.isValueEmpty = function isValueEmpty(value) {
