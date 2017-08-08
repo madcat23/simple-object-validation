@@ -41,6 +41,8 @@ $(window).on('scroll', function(event) {
 
     if ($menuItem.length > 0) {
       $menuItem.addClass('active')
+
+      /*
       var menuItemPosition = $menuItem.offset().top
       var itemOffset = menuItemPosition - globalScrollPosition
       if (itemOffset < 0) {
@@ -50,6 +52,7 @@ $(window).on('scroll', function(event) {
         var newScrollPosition = menuItemPosition - globalScrollPosition + sideMenuScrollPosition - sideMenuHeight + $menuItem.outerHeight() - 1
         $navSideMenu.scrollTop(newScrollPosition)
       }
+      */
     }
   }
 }).trigger('scroll')
@@ -73,6 +76,8 @@ $(document).ready(function() {
     ["match","#match"],
     ["assemble","#assemble"],
     ["validator","#validator"],
+    ["isEqualTo","#is-equal-to"],
+    ["isRequiredIf","#is-required-if"],
   ]
 
   for (var i = 0; i < allFunktions.length; i++) {

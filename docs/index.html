@@ -52,7 +52,7 @@
       <div class="brand">
         <a href="https://madcat23.github.io/simple-object-validation/"><img src="logo.png" width="80" height="80" /></a>
         <p style="font-weight: bold;">simple object validation</p>
-        <p><strong>API Docs</strong></p>
+        <p><strong>API Docs</strong> <small style="color: #a0a0a0;">(v1.1.0)</small></p>
       </div>
       <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
       <div class="menu-list">
@@ -63,12 +63,14 @@
 
           <a href="#validators" class="headline"><i class="fa fa-puzzle-piece"></i> Validators</a>
           <a href="#is-required">isRequired</a>
+          <a href="#is-required-if">isRequiredIf</a>
           <a href="#is-alphanumeric">isAlphanumeric</a>
           <a href="#is-numeric">isNumeric</a>
           <a href="#is-integer">isInteger</a>
           <a href="#is-between">isBetween</a>
           <a href="#is-greater-than-or-equal">isGreaterThanOrEqual</a>
           <a href="#is-less-than-or-equal">isLessThanOrEqual</a>
+          <a href="#is-equal-to">isEqualTo</a>
           <a href="#bring-your-own-validator">Bring your own validator</a>
           
           <a href="#core" class="headline"><i class="fa fa-cube"></i> Core API</a>
@@ -168,6 +170,35 @@ isRequired('Name')('Mathew')  // undefined
 
 
 <!-- *************************************************************************************************************************** -->
+<h2 id="is-required-if">isRequiredIf</h2>
+<p>Checks if a value is set (like isRequired) but depending on a specified condition.</p>
+<pre><code class="javascript">import { isRequiredIf } from 'simple-object-validation'
+
+const cityIsNotEmpty = values => typeof values.city !== 'undefined' && values.city !== null && values.city !== ''
+
+const isValidLocation = assemble({
+  country: isRequiredIf(cityIsNotEmpty)('Country')
+})
+
+isValidLocation({
+  city: 'Berlin'
+})
+// { country: 'Country is required.' }
+
+isValidLocation({
+  city: 'Berlin',
+  country: 'Germany'
+})
+// {}
+
+isValidLocation({})
+// {}
+</code></pre>
+<!-- *************************************************************************************************************************** -->
+
+
+
+<!-- *************************************************************************************************************************** -->
 <h2 id="is-alphanumeric">isAlphanumeric</h2>
 <p>Determines wether the given value is alphanumeric.</p>
 <pre><code class="javascript">import { isAlphanumeric } from 'simple-object-validation'
@@ -256,19 +287,82 @@ isLessThanOrEqual(2048)('Number')(123)     // undefined
 
 
 <!-- *************************************************************************************************************************** -->
+<h2 id="is-equal-to">isEqualTo</h2>
+<p>Checks if a value is equal to another value.</p>
+<pre><code class="javascript">import { isEqualTo } from 'simple-object-validation'
+import { isValidPassword } from './password-validation' // Custom password validator
+
+// Configuration by property:
+const isEqualToPassword = isEqualTo({
+  messageCreator: () => 'The passwords must be equal.'  // Overriding default message
+})({ property: 'password' })                            // password is the property that must be equal
+
+const isValidUser = assemble({
+  login: isRequired('Login'),
+  password: isValidPassword('Password'),
+  repeatPassword: isEqualToPassword('Repeat password')
+})
+
+isValidUser({
+  login: 'Administrator',
+  password: '9MMGIVgt',
+  repeatPassword: '9MMGIVgt',
+})
+// {}
+
+isValidUser({
+  login: 'Administrator',
+  password: '9MMGIVgt',
+  repeatPassword: '9MMGIVgz',
+})
+// { repeatPassword: 'The passwords must be equal.' }
+
+
+// Configuration by value resolver:
+const isValidFoo = assemble({
+  foo: assemble({
+    baz: isRequired('Baz')
+  }),
+  bar: isEqualTo({
+    value: values => values.foo.baz,
+    name: 'Baz'
+  })('Bar')
+})
+
+isValidFoo({
+  foo: {
+    baz: '123'
+  },
+  bar: '123'
+})
+// {}
+
+isValidFoo({
+  foo: {
+    baz: '123'
+  },
+  bar: '1234'
+})
+// { bar: 'Bar must be equal to Baz.' }
+</code></pre>
+<!-- *************************************************************************************************************************** -->
+
+
+
+<!-- *************************************************************************************************************************** -->
 <h2 id="bring-your-own-validator">Bring your own validator</h2>
 <p>You can easily build your own validators using the built-in <a href="#validator">validator</a> factory function.</p>
 <pre><code class="javascript">import { validator } from 'simple-object-validation'
 
 // without parameter:
 const containsLetterA = validator(
-  (value, param) => value && value.toLowerCase().indexOf('a') > -1,
+  (value, param, allValues) => value && value.toLowerCase().indexOf('a') > -1,
   (param, name, value) => `${name} does not contain letter A.`
 )
 
 // with parameter:
 const containsLetter = validator(
-  (value, param) => value && value.toLowerCase().indexOf(param.toLowerCase()) > -1,
+  (value, param, allValues) => value && value.toLowerCase().indexOf(param.toLowerCase()) > -1,
   {
     expectParameter: true, // this option is only mandatory when the parameter is a string (see validator for more information)
     messageCreator: (param, name, value) => `${name} does not contain letter ${param.toUpperCase()}.`
@@ -312,7 +406,7 @@ validate({ property1: 'bar', property2: 'simple-object-validation' }) // {}
 
 <!-- *************************************************************************************************************************** -->
 <h2 id="assemble">assemble</h2>
-<p>This function is used to combine validators in order to validate whole objects. Your input is an object with some values. Your output is an object with some error messages. You can also validate nested objects. The error messages will then be nested as well.</p>
+<p>This function is used to combine validators in order to validate whole objects. Your input is an object with some values. Your output is an object with some error messages. You can also validate nested objects. The error messages will then be nested as well. Every assembled validator will be called with its particular value and a second parameter (allValues) which points to the whole object.</p>
 <pre><code class="javascript">import { assemble, isRequired, isInteger } from 'simple-object-validation'
 
 const isValidUser = assemble({
@@ -391,14 +485,14 @@ isValidTuple(['foo', '1', '1', '1'])         // [undefined, undefined, undefined
 <h3>Definition</h3>
 <div class="definition">
   (checkFunction: <em>(value: <em>any</em>, param: <em>any</em>) => boolean</em>, messageCreator: <em>(param: <em>any</em>, name: <em>string</em>, value: <em>any</em>) => string</em>)
-  <br />=> (param: <em>any</em>) => (name: <em>string</em>) => (value: <em>any</em>) => undefined | string
+  <br />=> (param: <em>any</em>) => (name: <em>string</em>) => (value: <em>any</em>, allValues: <em>any</em>) => undefined | string
 </div>
 <p>
   Okay, okay! This looks difficult at first sight, definitely. But it totally makes sense. This is how it works:
 </p>
 <p>
   Let's start with line two of the definition which describes the validator that is created using validator().
-  Generally in simple-object-validation every validator first takes a <strong>configuration parameter</strong> to further specify its behaviour. This is going to return another function that waits for being called with the <strong>field name</strong>. That call however will return a function that finally wants to be called with a <strong>value</strong>. It will either return <strong>undefined</strong> or an <strong>error message</strong>.
+  Generally in simple-object-validation every validator first takes a <strong>configuration parameter</strong> to further specify its behaviour. This is going to return another function that waits for being called with the <strong>field name</strong>. That call however will return a function that finally wants to be called with a <strong>value</strong> (and possibly the other values [<strong>allValues</strong>] in the context of the validation, see <a href="#assemble">assemble</a>). It will either return <strong>undefined</strong> or an <strong>error message</strong>.
 </p>
 <p>
   BUT: You don't have to care about that at all. You only have to provide two functions (as you can see in line one). The first function (checkFunction) basically provides the validation logic while the second function (messageCreator) creates an error message based on the variables that are passed to the validator during the configuration process.
@@ -409,7 +503,7 @@ isValidTuple(['foo', '1', '1', '1'])         // [undefined, undefined, undefined
 <pre><code class="javascript">import { validator } from 'simple-object-validation'
 
 const hasMinLength = validator(
-  (value, param) => value.length >= param,
+  (value, param, allValues) => value.length >= param,
   (param, name, value) => `${name} must have a minimum length of ${param}!`
 )
 
@@ -423,7 +517,7 @@ hasMinLength(4)('My string')('a longer string') // undefined
 <pre><code class="javascript">import { validator } from 'simple-object-validation'
 
 const isMeaningOfLife = validator(
-  (value, param) => value === 42,
+  (value, param, allValues) => value === 42,
   (param, name, value) => `${name} must be the meaning of life!`
 )
 
@@ -440,7 +534,7 @@ isMeaningOfLife('Magic Number')(42) // undefined
 <pre><code class="javascript">import { validator } from 'simple-object-validation'
   
 const isEqualToString = validator(
-  (value, param) => value === param,
+  (value, param, allValues) => value === param,
   {
     expectParameter: true,
     messageCreator: (param, name, value) => `${name} must be equal to ${param}!`

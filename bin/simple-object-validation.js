@@ -466,6 +466,14 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	// TODO: FINISH!
+	var containsErrors = exports.containsErrors = function containsErrors(obj) {
+	  if (typeof obj === 'undefined') {
+	    return false;
+	  }
+	  return false;
+	};
+
 	var isValueEmpty = exports.isValueEmpty = function isValueEmpty(value) {
 	  return typeof value === 'undefined' || value === null || typeof value === 'string' && value === '';
 	};
