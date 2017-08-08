@@ -272,6 +272,28 @@
 	  }, { reducers: [] });
 	};
 
+	var checkForUnknownProperties = function checkForUnknownProperties(validators, values) {
+	  var whitelist = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+
+	  var validatorKeys = Object.keys(validators);
+	  var valueKeys = Object.keys(values);
+
+	  for (var i = 0; i < whitelist.length; i++) {
+	    var entry = whitelist[i];
+	    var index = valueKeys.indexOf(entry);
+	    if (index > -1) {
+	      valueKeys.splice(index, 1);
+	    }
+	  }
+
+	  for (var _i = 0; _i < valueKeys.length; _i++) {
+	    var value = valueKeys[_i];
+	    if (validatorKeys.indexOf(value) === -1) {
+	      throw new Error('No validator found for ' + value);
+	    }
+	  }
+	};
+
 	exports.default = function (validators) {
 	  for (var _len = arguments.length, params = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
 	    params[_key - 1] = arguments[_key];
@@ -284,12 +306,19 @@
 
 	    var valueIsUndefined = typeof value === 'undefined' || value == null;
 
-	    /*
-	     * In some cases it can be ok if the object that should be validated is undefined.
-	     * But this should be specified with a flag (ignoreIfMissing).
-	     */
-	    if (valueIsUndefined && (typeof options === 'undefined' ? 'undefined' : _typeof(options)) === 'object' && options.ignoreIfMissing === true) {
-	      return {};
+	    if ((typeof options === 'undefined' ? 'undefined' : _typeof(options)) === 'object') {
+	      /*
+	      * In some cases it can be ok if the object that should be validated is undefined.
+	      * But this should be specified with a flag (ignoreIfMissing).
+	      */
+	      if (valueIsUndefined && options.ignoreIfMissing === true) {
+	        return {};
+	      }
+
+	      // if specified, check for unknown properties
+	      if (options.strictValidation === true) {
+	        checkForUnknownProperties(validators, value, options.whitelist);
+	      }
 	    }
 
 	    var result = {};

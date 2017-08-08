@@ -139,3 +139,34 @@ it('should propagate allValues to every validator', () => {
 
   expect(validate({ foo: 'foobar', bar: { baz: 'foobar' } })).toEqual({})
 })
+
+it('should check for unknown properties correctly', () => {
+  // Will it throw an error?
+  const validateDisallowingUnknownProperties = assemble({
+    foo: required,
+    bar: required,
+  }, { strictValidation: true })
+
+  expect(() => validateDisallowingUnknownProperties({ foo: 'foo', bar: 'bar' })).not.toThrow()
+  expect(() => validateDisallowingUnknownProperties({ foo: 'foo', bar: 'bar', baz: 'baz' })).toThrow('No validator found for baz')
+
+
+  // Whitelist
+  const validateWhitelistingProperties = assemble({
+    foo: required,
+    bar: required,
+  }, { strictValidation: true, whitelist: ['baz'] })
+
+  expect(() => validateWhitelistingProperties({ foo: 'foo', bar: 'bar', baz: 'baz' })).not.toThrow()
+  expect(() => validateWhitelistingProperties({ foo: 'foo', bar: 'bar', baz: 'baz', boom: 'boom' })).toThrow('No validator found for boom')
+
+
+  // Normal call with unknown property
+  const validateAllowingUnknownProperties = assemble({
+    foo: required,
+    bar: required,
+  })
+
+  expect(() => validateAllowingUnknownProperties({ foo: 'foo', bar: 'bar' })).not.toThrow()
+  expect(() => validateAllowingUnknownProperties({ foo: 'foo', bar: 'bar', baz: 'baz' })).not.toThrow()
+})

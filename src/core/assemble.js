@@ -5,17 +5,45 @@ const evaluateParams = params => params.reduce((acc, value, index, array) => {
   return { ...acc, reducers: [...acc.reducers, value] }
 }, { reducers: [] })
 
+const checkForUnknownProperties = (validators, values, whitelist = []) => {
+  const validatorKeys = Object.keys(validators)
+  const valueKeys = Object.keys(values)
+
+  for (let i = 0; i < whitelist.length; i++) {
+    const entry = whitelist[i]
+    const index = valueKeys.indexOf(entry)
+    if (index > -1) {
+      valueKeys.splice(index, 1)
+    }
+  }
+
+  for (let i = 0; i < valueKeys.length; i++) {
+    const value = valueKeys[i]
+    if (validatorKeys.indexOf(value) === -1) {
+      throw new Error(`No validator found for ${value}`)
+    }
+  }
+}
+
 export default (validators, ...params) => (value, allValues) => {
   const { reducers, options } = evaluateParams(params)
 
   const valueIsUndefined = typeof value === 'undefined' || value == null
 
-  /*
-   * In some cases it can be ok if the object that should be validated is undefined.
-   * But this should be specified with a flag (ignoreIfMissing).
-   */
-  if (valueIsUndefined && typeof options === 'object' && options.ignoreIfMissing === true) {
-    return {}
+
+  if (typeof options === 'object') {
+    /*
+    * In some cases it can be ok if the object that should be validated is undefined.
+    * But this should be specified with a flag (ignoreIfMissing).
+    */
+    if (valueIsUndefined && options.ignoreIfMissing === true) {
+      return {}
+    }
+
+    // if specified, check for unknown properties
+    if (options.strictValidation === true) {
+      checkForUnknownProperties(validators, value, options.whitelist)
+    }
   }
 
   const result = {}
