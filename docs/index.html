@@ -41,6 +41,20 @@
       pre code {
         white-space: pre;
       }
+
+      table.parameters {
+        border-spacing: 5px;
+      }
+
+      table.parameters td {
+        padding: 5px 15px;
+        vertical-align: top;
+        background: #444444;
+      }
+      table.parameters thead td {
+        font-weight: bold;
+        border-bottom: 1px solid #777777;
+      }
     </style>
   </head>
   <body>
@@ -52,7 +66,7 @@
       <div class="brand">
         <a href="https://madcat23.github.io/simple-object-validation/"><img src="logo.png" width="80" height="80" /></a>
         <p style="font-weight: bold;">simple object validation</p>
-        <p><strong>API Docs</strong> <small style="color: #a0a0a0;">(v1.1.0)</small></p>
+        <p><strong>API Docs</strong> <small style="color: #a0a0a0;">(v1.1)</small></p>
       </div>
       <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
       <div class="menu-list">
@@ -421,6 +435,81 @@ const isValidUser = assemble({
 
 isValidUser({ age: 17 }) // { name: 'Full name is required.', address: { addressLine1: 'Address Line 1 is required.', zipCode: 'Zip code is required.', city: 'City is required.' } }
 isValidUser({ name: 'Angela Merkel', age: 63, address: { addressLine1: 'Willy-Brandt-Straße 1', zipCode: '10557', city: 'Berlin' } }) // undefined
+</code></pre>
+
+<h4 style="margin: 30px 0 20px 0;">
+  Options:
+</h4>
+
+<table class="parameters">
+  <thead>
+    <tr>
+      <td>Option</td>
+      <td>Type</td>
+      <td>Default</td>
+      <td>Description</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        ignoreIfMissing
+      </td>
+      <td>
+        boolean
+      </td>
+      <td>
+        false
+      </td>
+      <td>
+        If ignoreIfMissing is set to true, no validation will take place for the object. Normally a missing object, that is defined by an assemble function, is treated like an existing object with every property set to undefined.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        strictValidation
+      </td>
+      <td>
+        boolean
+      </td>
+      <td>
+        false
+      </td>
+      <td>
+        If strictValidation is set to true, every property must be defined for validation. If a property is not defined, validation will throw an error. However if a property can not be validated, it should then be part of a whitelist (see whitelist option). This option is <span style="color: #ee6666;">security-relevant</span> and it is recommended when running validation on the server.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        whitelist
+      </td>
+      <td>
+        string[]
+      </td>
+      <td>
+        []
+      </td>
+      <td>
+        This option is only necessary when strictValidation is set to true. The whitelist contains any property name that can be ignored for validation.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 style="margin: 30px 0 20px 0;">
+  Examples:
+</h4>
+
+<pre><code class="javascript">const isValid = assemble({
+  foo: isFoo('Foo'),
+  bar: isBar('Bar'),
+}, {
+  strictValidation: true,
+  whitelist: ['baz'],
+})
+
+isValid({ foo: 'foo', bar: 'bar', baz: { a: ['b', 'c'] } }) // {}
+isValid({ foo: 'foo', bar: 'bar', query: 'SELECT login, password FROM user' }) // throws Error
 </code></pre>
 <!-- *************************************************************************************************************************** -->
 
