@@ -12,6 +12,10 @@ export default validator(
       throw Error(ERROR_MESSAGE)
     }
 
+    if (typeof allValues === 'undefined') {
+      return true
+    }
+
     const otherValue = typeof param.property === 'string' ? allValues[param.property] : param.value(allValues)
 
     if (isValueEmpty(value) && isValueEmpty(otherValue)) {

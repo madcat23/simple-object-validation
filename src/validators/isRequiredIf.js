@@ -10,7 +10,7 @@ export default validator(
     if (condition) {
       return !isValueEmpty(value)
     }
-    return undefined
+    return true
   },
   (param, name) => `${name} is required.`,
 )

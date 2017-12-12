@@ -338,7 +338,7 @@ const isValidFoo = assemble({
     baz: isRequired('Baz')
   }),
   bar: isEqualTo({
-    value: values => values.foo.baz,
+    value: values => values.foo && values.foo.baz,
     name: 'Baz'
   })('Bar')
 })

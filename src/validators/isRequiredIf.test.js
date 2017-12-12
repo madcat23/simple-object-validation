@@ -1,7 +1,7 @@
 import isRequiredIf from './isRequiredIf'
 /* global test, it, expect */
 
-test('string -> OK', () => {
+test('required if', () => {
   const validate = isRequiredIf(values => values.otherValue === 'foo')('Field')
 
   const values = {
@@ -10,10 +10,13 @@ test('string -> OK', () => {
   }
 
   expect(validate('bar', values)).toBeUndefined()
+  expect(validate('', values)).toEqual('Field is required.')
 
   const values2 = {
     foo: 'bar',
-    otherValue: 'bar',
+    otherValue: 'fooXXX',
   }
-  expect(validate('bar', values2)).toEqual('Field is required.')
+
+  expect(validate('bar', values2)).toBeUndefined()
+  expect(validate('', values2)).toBeUndefined()
 })

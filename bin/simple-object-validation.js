@@ -167,6 +167,15 @@
 	  }
 	});
 
+	var _isEqualTo = __webpack_require__(15);
+
+	Object.defineProperty(exports, 'isEqualTo', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_isEqualTo).default;
+	  }
+	});
+
 	var _utils = __webpack_require__(7);
 
 	Object.defineProperty(exports, 'containsError', {
@@ -714,86 +723,73 @@
 	  value: true
 	});
 
-	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+	var _validator = __webpack_require__(1);
 
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	var _validator2 = _interopRequireDefault(_validator);
 
 	var _utils = __webpack_require__(7);
 
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var defaultMessageCreator = function defaultMessageCreator(fieldName1, fieldName2) {
-	  return fieldName1 + ' is required when ' + fieldName2 + ' is given.';
-	};
+	exports.default = (0, _validator2.default)(function (value, param, allValues) {
+	  if (typeof param !== 'function') {
+	    throw Error('Parameter must be a function.');
+	  }
+	  var condition = param(allValues);
+	  if (condition) {
+	    return !(0, _utils.isValueEmpty)(value);
+	  }
+	  return true;
+	}, function (param, name) {
+	  return name + ' is required.';
+	});
 
-	// eslint-disable-next-line max-len
-	var regularIsRequiredIf = function regularIsRequiredIf(property1, name1, property2, name2) {
-	  var messageCreator = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : defaultMessageCreator;
-	  var nameTransformer = arguments[5];
-	  return function (value, result) {
-	    if (typeof value === 'undefined') {
-	      return result;
-	    }
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
 
-	    var fieldName1 = nameTransformer ? nameTransformer(name1) : name1;
-	    var fieldName2 = nameTransformer ? nameTransformer(name2) : name2;
+	'use strict';
 
-	    var value1 = value[property1];
-	    var value2 = value[property2];
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 
-	    if (!(0, _utils.isValueEmpty)(value2) && (0, _utils.isValueEmpty)(value1)) {
-	      return _extends({}, result, _defineProperty({}, property1, messageCreator(fieldName1, fieldName2, value1, value2)));
-	    }
-	    return result;
-	  };
-	};
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-	var isRequiredIf = function isRequiredIf(param1, param2) {
-	  /*
-	   * Called to override messageCreator and/or nameTransformer function
-	   */
-	  if (!Array.isArray(param1) && (typeof param1 === 'undefined' ? 'undefined' : _typeof(param1)) === 'object') {
-	    var _ret = function () {
-	      var messageCreator = param1.messageCreator ? param1.messageCreator : undefined;
-	      var nameTransformer = param1.nameTransformer ? param1.nameTransformer : undefined;
+	var _validator = __webpack_require__(1);
 
-	      // eslint-disable-next-line max-len
-	      return {
-	        v: function v(_ref, _ref2) {
-	          var _ref4 = _slicedToArray(_ref, 2),
-	              p1 = _ref4[0],
-	              n1 = _ref4[1];
+	var _validator2 = _interopRequireDefault(_validator);
 
-	          var _ref3 = _slicedToArray(_ref2, 2),
-	              p2 = _ref3[0],
-	              n2 = _ref3[1];
+	var _utils = __webpack_require__(7);
 
-	          return regularIsRequiredIf(p1, n1, p2, n2, messageCreator, nameTransformer);
-	        }
-	      };
-	    }();
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	    if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+	var ERROR_MESSAGE = 'Parameter must be an object like { property: \'foo\', name: \'bar\' } or { value: values => values.foo.bar, name: \'bar\' }.';
+
+	exports.default = (0, _validator2.default)(function (value, param, allValues) {
+	  if ((typeof param === 'undefined' ? 'undefined' : _typeof(param)) !== 'object') {
+	    throw Error(ERROR_MESSAGE);
+	  }
+	  if (typeof param.value !== 'function' && typeof param.property !== 'string') {
+	    throw Error(ERROR_MESSAGE);
 	  }
 
-	  /*
-	   * Called in a regular way
-	   */
+	  if (typeof allValues === 'undefined') {
+	    return true;
+	  }
 
-	  var _param = _slicedToArray(param1, 2),
-	      property1 = _param[0],
-	      name1 = _param[1];
+	  var otherValue = typeof param.property === 'string' ? allValues[param.property] : param.value(allValues);
 
-	  var _param2 = _slicedToArray(param2, 2),
-	      property2 = _param2[0],
-	      name2 = _param2[1];
-
-	  return regularIsRequiredIf(property1, name1, property2, name2, undefined, undefined);
-	};
-
-	exports.default = isRequiredIf;
+	  if ((0, _utils.isValueEmpty)(value) && (0, _utils.isValueEmpty)(otherValue)) {
+	    return true;
+	  }
+	  return value === otherValue;
+	}, function (param, name) {
+	  if (typeof param.name === 'string') {
+	    return name + ' must be equal to ' + param.name + '.';
+	  }
+	  return 'The values must be equal.';
+	});
 
 /***/ }
 /******/ ])));
